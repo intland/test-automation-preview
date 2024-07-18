@@ -1,0 +1,81 @@
+/*
+ * Copyright by Intland Software
+ *
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of Intland Software. ("Confidential Information"). You
+ * shall not disclose such Confidential Information and shall use
+ * it only in accordance with the terms of the license agreement
+ * you entered into with Intland.
+ */
+pluginManagement {
+	repositories {
+		mavenLocal()
+
+        maven {
+            url "https://maven.codebeamer.com/3rdparty"
+        }
+
+        maven {
+            url "https://maven.codebeamer.com/release"
+        }
+
+        maven {
+            url "https://maven.codebeamer.com/snapshot"
+        }
+
+		mavenCentral()
+		gradlePluginPortal()
+	}
+
+	plugins {
+		id "com.github.node-gradle.node" version "3.5.0"
+	}
+}
+
+buildscript {
+	repositories {
+		mavenLocal()
+
+        maven {
+            url "https://maven.codebeamer.com/3rdparty"
+        }
+
+        maven {
+            url "https://maven.codebeamer.com/release"
+        }
+
+        maven {
+            url "https://maven.codebeamer.com/snapshot"
+        }
+
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
+
+dependencyResolutionManagement {
+	repositories {
+		mavenLocal()
+
+        maven {
+            url "https://maven.codebeamer.com/3rdparty"
+        }
+
+        maven {
+            url "https://maven.codebeamer.com/release"
+        }
+
+        maven {
+            url "https://maven.codebeamer.com/snapshot"
+        }
+
+		mavenCentral()
+	}
+}
+
+
+// Integration
+include ':cb-ui-integration'
+include ':cb-ui-integration-tests'

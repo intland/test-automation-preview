@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ###########################################################
+ #                                                         #
+ # Please note that this file is used only for DEVELOPMENT #
+ # see: /etc/config/log4j2.xml                             #
+ #                                                         #
+ ###########################################################
+ -->
+
+<!--
+  ~ Copyright by Intland Software
+  ~
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information
+  ~ of Intland Software. ("Confidential Information"). You
+  ~ shall not disclose such Confidential Information and shall use
+  ~ it only in accordance with the terms of the license agreement
+  ~ you entered into with Intland.
+  -->
+
+<Configuration>
+    <Properties>
+        <!-- the pattern for log lines -->
+        <Property name="logPattern">%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{3} - %m [%t] [%tid] %X%n</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- console -->
+        <Console name="stdout" target="system_out">
+            <PatternLayout pattern="${logPattern}"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="stdout"/>
+        </Root>
+    </Loggers>
+</Configuration>

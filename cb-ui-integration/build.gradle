@@ -1,0 +1,40 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+defaultTasks 'build'
+
+tasks.distZip.enabled = false
+tasks.distTar.enabled = false
+
+dependencies {
+	implementation group: 'com.intland.codebeamer', name: 'cb-common', version: '2.3.0.0-SNAPSHOT1'
+	implementation group: 'com.intland.codebeamer', name: 'cb-api-internal', version: '2.3.0.0-SNAPSHOT1'
+	
+	implementation group: 'org.testng', name: 'testng', version: '7.10.2'
+	implementation group: 'com.microsoft.playwright', name: 'playwright', version: '1.44.0'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j2-impl', version: '2.23.0'
+	implementation group: 'net.datafaker', name: 'datafaker', version: '2.2.2'
+	implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+	implementation group: 'com.google.guava', name: 'guava', version: '33.0.0-jre'
+		
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.16.1'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.16.1'
+	implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.16.1'
+	
+	implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
+	
+	implementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+}
+
+test {
+	description = 'Runs the integration tests.'
+	group = 'Verification'
+	
+	ignoreFailures true
+	systemProperties System.getProperties()
+	useTestNG() {
+		parallel 'classes'
+		threadCount 3
+	}
+}

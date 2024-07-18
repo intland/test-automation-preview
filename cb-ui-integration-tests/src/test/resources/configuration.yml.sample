@@ -1,0 +1,24 @@
+applicationConfiguration:
+  url: "http://localhost:8080"
+  apiUserConfiguration:
+    username: "bond"
+    password: "007"
+screenshotConfiguration:
+  directoryPath: null
+  uri: null
+viewportConfiguration:
+  width: 1280
+  height: 1024
+tracingConfiguration:
+  traceDirectoryPath: null
+  openTraceApplication: false
+  sources: true
+  snapshots: true
+  screenshots: true
+timeoutConfiguration:
+  defaultTimeout: 5000
+  defaultNavigationTimeout: 5000
+debugConfiguration:
+  slowMo: 0
+  headless: false
+  inspector: false

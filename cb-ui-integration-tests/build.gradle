@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+defaultTasks 'build'
+
+tasks.distZip.enabled = false
+tasks.distTar.enabled = false
+
+dependencies {
+	testImplementation project(path: ':cb-ui-integration', configuration: 'default')
+}
+
+def integrationTestConfiguration = {
+	ignoreFailures true
+	systemProperties System.getProperties()
+	useTestNG() {
+		parallel 'classes'
+		threadCount 3
+	}
+}
+
+task integrationTest(type: Test) {
+	description = 'Runs the integration tests.'
+	group = 'Verification'
+	configure integrationTestConfiguration
+}
