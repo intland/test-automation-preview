@@ -5,60 +5,69 @@ import com.intland.codebeamer.integration.CodebeamerPage;
 public class FieldComponentFactory {
 
 	private final CodebeamerPage codebeamerPage;
-	
-	private final String fieldName;
 
-	public FieldComponentFactory(CodebeamerPage codebeamerPage, String fieldName) {
+	public FieldComponentFactory(CodebeamerPage codebeamerPage) {
 		this.codebeamerPage = codebeamerPage;
-		this.fieldName = fieldName;
 	}
 
-	public CountrySelectorComponent getCountrySelectorComponent() {
-		return new CountrySelectorComponent(codebeamerPage, fieldName);
-	}
-	
-	public LanguageSelectorComponent getLanguageSelectorComponent() {
-		return new LanguageSelectorComponent(codebeamerPage, fieldName);
-	}
-	
-	public RoleAndMemberSelectorComponent getRoleAndMemberSelectorComponent() {
-		return new RoleAndMemberSelectorComponent(codebeamerPage, fieldName);
-	}
-	
-	public ChoiceFieldComponent getChoiceFieldComponent() {
-		return new ChoiceFieldComponent(codebeamerPage, fieldName);
-	}
-	
-	public TextFieldComponent getTextFieldComponent() {
-		return new TextFieldComponent(codebeamerPage, fieldName);
-	}
-	
-	public WikiTextFieldComponent getWikiTextFieldComponent() {
-		return new WikiTextFieldComponent(codebeamerPage, fieldName);
-	}
-	
-	public IntegerFieldComponent getIntegerFieldComponent() {
-		return new IntegerFieldComponent(codebeamerPage, fieldName);
+	public ReferenceFieldComponent getReferenceFieldComponent(String fieldLocator) {
+		return new ReferenceFieldComponent(codebeamerPage, fieldLocator);
 	}
 
-	public DecimalFieldComponent getDecimalFieldComponent() {
-		return new DecimalFieldComponent(codebeamerPage, fieldName);
-	}
-	
-	public DateFieldComponent getDateFieldComponent() {
-		return new DateFieldComponent(codebeamerPage, fieldName);
-	}
-	
-	public BooleanFieldComponent getBooleanFieldComponent() {
-		return new BooleanFieldComponent(codebeamerPage, fieldName);
-	}
-	
-	public DurationFieldComponent getDurationFieldComponent() {
-		return new DurationFieldComponent(codebeamerPage, fieldName);
+	public UrlFieldComponent getUrlFieldComponent(String fieldLocator) {
+		return new UrlFieldComponent(codebeamerPage, fieldLocator);
 	}
 
-	public ColorFieldComponent getColorFieldComponent() {
-		return new ColorFieldComponent(codebeamerPage, fieldName);
+	public CountrySelectorComponent getCountrySelectorComponent(String fieldLocator) {
+		return new CountrySelectorComponent(codebeamerPage, fieldLocator);
 	}
-	
+
+	public LanguageSelectorComponent getLanguageSelectorComponent(String fieldLocator) {
+		return new LanguageSelectorComponent(codebeamerPage, fieldLocator);
+	}
+
+	public RoleAndMemberSelectorComponent getRoleAndMemberSelectorComponent(String fieldLocator) {
+		return new RoleAndMemberSelectorComponent(codebeamerPage, fieldLocator);
+	}
+
+	public ChoiceFieldComponent getChoiceFieldComponent(String fieldLocator) {
+		return new ChoiceFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public TextFieldComponent getTextFieldComponent(String fieldLocator) {
+		return new TextFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public WikiTextFieldComponent getWikiTextFieldComponent(String fieldLocator) {
+		return new WikiTextFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public IntegerFieldComponent getIntegerFieldComponent(String fieldLocator) {
+		return new IntegerFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public DecimalFieldComponent getDecimalFieldComponent(String fieldLocator) {
+		return new DecimalFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public DateFieldComponent getDateFieldComponent(String fieldLocator) {
+		return new DateFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public BooleanFieldComponent getBooleanFieldComponent(String fieldLocator) {
+		return new BooleanFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public DurationFieldComponent getDurationFieldComponent(String fieldLocator) {
+		return new DurationFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public ColorFieldComponent getColorFieldComponent(String fieldLocator) {
+		return new ColorFieldComponent(codebeamerPage, fieldLocator);
+	}
+
+	public LabelComponent getLabelComponent(String fieldLocator) {
+		return new LabelComponent(codebeamerPage, fieldLocator);
+	}
+
 }

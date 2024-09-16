@@ -7,6 +7,7 @@ import com.intland.codebeamer.integration.api.ApiUser;
 import com.intland.codebeamer.integration.api.legacy.LegacyApiException;
 import com.intland.codebeamer.integration.api.service.AbstractApiService;
 import com.intland.codebeamer.integration.api.service.usergroup.legacy.LegacyUserGroupApi;
+import com.intland.codebeamer.integration.common.usergroup.UserGroupPermission;
 import com.intland.codebeamer.integration.configuration.ApplicationConfiguration;
 import com.intland.swagger.client.internal.api.UserApi;
 import com.intland.swagger.client.model.ProjectGroupWithRoles;
@@ -44,6 +45,14 @@ public class UserGroupApiService extends AbstractApiService {
 
 	public UserGroup createProjectCategoryAdminGroupIfMissing() {
 		return createUserGroupIfMissing(UserGroupPermission.PROJECT_CATEGORY_ADMIN);
+	}
+
+	public UserGroup createAccountAdminGroupIfMissing() {
+		return createUserGroupIfMissing(UserGroupPermission.ACCOUNT_ADMIN);
+	}
+
+	public UserGroup createReviewAdminGroupIfMissing() {
+		return createUserGroupIfMissing(UserGroupPermission.REVIEW_ADMINISTRATION);
 	}
 
 	public UserGroup createSystemAdminGroupIfMissing() {

@@ -12,24 +12,37 @@
 
 package com.intland.codebeamer.integration.classic.component;
 
+import java.nio.file.Path;
 import java.time.Duration;
 
 import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
+import com.microsoft.playwright.Locator;
 
 public class FroalaComponent extends AbstractCodebeamerComponent<FroalaComponent, FroalaComponentAssertions> {
 
 	public FroalaComponent(CodebeamerPage codebeamerPage, String frameLocator, String parentSelector) {
-		super(codebeamerPage, frameLocator, parentSelector + " div.editor-wrapper", true);
+		super(codebeamerPage, frameLocator, parentSelector + " div.editor-wrapper");
 	}
 	
 	public FroalaComponent(CodebeamerPage codebeamerPage, String parentSelector) {
 		super(codebeamerPage, parentSelector + " div.editor-wrapper");
 	}
 
+	public FroalaComponent save() {
+		getSaveButton().click(new Locator.ClickOptions().setDelay(200));
+		getSaveButton().waitForDetached();
+		return this;
+	}
+
 	public FroalaComponent pressEnter() {
 		getMarkUpTextArea().pressEnter();
+		return this;
+	}
+
+	public FroalaComponent pasteFromClipboard() {
+		getRichTextValueElement().press("Control+v");
 		return this;
 	}
 	
@@ -55,9 +68,8 @@ public class FroalaComponent extends AbstractCodebeamerComponent<FroalaComponent
 			if (isMarkUpModeActive()) {
 				return this;
 			}
-			
-			getRichTextOptionsElement().scrollIntoView().click();
-			getMarkupElement().click();
+
+			runAfterOpeningRichTextOptionsToolbar(() -> getMarkupElement().click());
 			return this;
 		}
 
@@ -71,6 +83,12 @@ public class FroalaComponent extends AbstractCodebeamerComponent<FroalaComponent
 		}
 		
 		throw new IllegalArgumentException("Type(%s) is not suppoted".formatted(type));
+	}
+
+	public FroalaComponent addAttachment(Path attachment) {
+		getCodebeamerPage().uploadFiles(() -> getUploadFileButton().click(), attachment);
+		pressEnter();
+		return this;
 	}
 	
 	public CodebeamerLocator getUploadFileButton() {
@@ -122,7 +140,7 @@ public class FroalaComponent extends AbstractCodebeamerComponent<FroalaComponent
 	
 	private boolean isMarkUpModeActive() {
 		try {
-			assertThat().isMarkUpModeActive(Duration.ofSeconds(1));
+			runAfterOpeningRichTextOptionsToolbar(() -> assertThat().isMarkUpModeActive(Duration.ofSeconds(1)));
 			return true;
 		} catch (AssertionError e) {
 			return false;
@@ -131,10 +149,37 @@ public class FroalaComponent extends AbstractCodebeamerComponent<FroalaComponent
 	
 	private boolean isRichTextModeActive() {
 		try {
-			assertThat().isRichTextModeActive(Duration.ofSeconds(1));
+			runAfterOpeningRichTextOptionsToolbar(() -> assertThat().isRichTextModeActive(Duration.ofSeconds(1)));
 			return true;
 		} catch (AssertionError e) {
 			return false;
+		}
+	}
+
+	private boolean isRichTextOptionsToolbarVisible() {
+		try {
+			assertThat().isRichTextOptionsToolbarIsVisible();
+			return true;
+		} catch (AssertionError e) {
+			return false;
+		}
+	}
+
+	private void runAfterOpeningRichTextOptionsToolbar(Runnable runnable) {
+		openRichTextOptionsToolbar();
+		runnable.run();
+		closeRichTextOptionsToolbar();
+	}
+
+	private void openRichTextOptionsToolbar() {
+		if (!isRichTextOptionsToolbarVisible()) {
+			getRichTextOptionsElement().scrollIntoView().click();
+		}
+	}
+
+	private void closeRichTextOptionsToolbar() {
+		if (isRichTextOptionsToolbarVisible()) {
+			getRichTextOptionsElement().scrollIntoView().click();
 		}
 	}
 	

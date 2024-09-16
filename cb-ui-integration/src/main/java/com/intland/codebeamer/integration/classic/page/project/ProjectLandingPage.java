@@ -13,15 +13,19 @@
 package com.intland.codebeamer.integration.classic.page.project;
 
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.api.service.project.Project;
+import com.intland.codebeamer.integration.api.service.project.ProjectId;
 import com.intland.codebeamer.integration.classic.page.project.component.actionbar.dashboard.ProjectDashboardActionbarComponent;
 import com.intland.codebeamer.integration.classic.page.project.component.tree.ProjectTreeComponent;
+import com.intland.codebeamer.integration.classic.page.wiki.component.WikiContentComponent;
 import com.intland.codebeamer.integration.sitemap.annotation.Action;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 import com.intland.codebeamer.integration.sitemap.annotation.Page;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerPage;
 
@@ -32,17 +36,34 @@ public class ProjectLandingPage extends AbstractCodebeamerPage<ProjectLandingPag
 
 	private static final String PROJECT_LANDING_PAGE_URL = "project/%s";
 
+	public static final Pattern PROJECT_LANDING_PAGE_PATTERN = Pattern.compile(".*/project/\\d+");
+
 	private final Project project;
 
+	@Component("Action bar")
 	private final ProjectDashboardActionbarComponent dashboardActionbarComponent;
 
+	@Component("Wiki tree")
 	private final ProjectTreeComponent projectTreeComponent;
+
+	@Component("Wiki content")
+	private final WikiContentComponent wikiContentComponent;
 
 	public ProjectLandingPage(CodebeamerPage codebeamerPage, Project project) {
 		super(codebeamerPage);
 		this.project = project;
 		this.projectTreeComponent = new ProjectTreeComponent(getCodebeamerPage());
 		this.dashboardActionbarComponent = new ProjectDashboardActionbarComponent(getCodebeamerPage());
+		this.wikiContentComponent = new WikiContentComponent(getCodebeamerPage(), "#centerDiv");
+		logger.debug("New project wiki landing created. Url: {}", PROJECT_LANDING_PAGE_URL);
+	}
+
+	public ProjectLandingPage(CodebeamerPage codebeamerPage, ProjectId projectId) {
+		super(codebeamerPage);
+		this.project = new Project(projectId, "");
+		this.projectTreeComponent = new ProjectTreeComponent(getCodebeamerPage());
+		this.dashboardActionbarComponent = new ProjectDashboardActionbarComponent(getCodebeamerPage());
+		this.wikiContentComponent = new WikiContentComponent(getCodebeamerPage(), "#centerDiv");
 		logger.debug("New project wiki landing created. Url: {}", PROJECT_LANDING_PAGE_URL);
 	}
 
@@ -70,6 +91,11 @@ public class ProjectLandingPage extends AbstractCodebeamerPage<ProjectLandingPag
 
 	public ProjectLandingPage applyProjectTreeComponent(Consumer<ProjectTreeComponent> formConsumer) {
 		formConsumer.accept(projectTreeComponent);
+		return this;
+	}
+
+	public ProjectLandingPage wikiContentComponent(Consumer<WikiContentComponent> formConsumer) {
+		formConsumer.accept(wikiContentComponent);
 		return this;
 	}
 

@@ -12,10 +12,9 @@
 
 package com.intland.codebeamer.integration.classic.page.tracker.main.component;
 
-import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponentAssert;
-import com.microsoft.playwright.assertions.LocatorAssertions;
+import com.intland.codebeamer.integration.classic.page.wiki.component.tree.AbstractTreeAssertions;
 
-public class TrackerTreeAssertions extends AbstractCodebeamerComponentAssert<TrackerTreeComponent, TrackerTreeAssertions> {
+public class TrackerTreeAssertions extends AbstractTreeAssertions<TrackerTreeComponent, TrackerTreeAssertions> {
 
 	protected TrackerTreeAssertions(TrackerTreeComponent component) {
 		super(component);
@@ -23,10 +22,6 @@ public class TrackerTreeAssertions extends AbstractCodebeamerComponentAssert<Tra
 
 	public TrackerTreeAssertions trackerExistsByName(String trackerName) {
 		return assertAll("Tracker should be found by '%s' name".formatted(trackerName),
-				() -> assertThat(getComponent().getWorkTrackerByName(trackerName)).isVisible(createIsVisibleOptions()));
-	}
-
-	private LocatorAssertions.IsVisibleOptions createIsVisibleOptions() {
-		return new LocatorAssertions.IsVisibleOptions().setTimeout(ONE_SECOND_AS_MILLIS);
+				() -> assertThat(getComponent().getTreeItemByName(trackerName)).isVisible(createIsVisibleOptions()));
 	}
 }

@@ -16,18 +16,16 @@ import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
-public class TextFieldComponent extends AbstractCodebeamerComponent<TextFieldComponent, TextFieldAssertions> {
+public class TextFieldComponent extends AbstractCodebeamerComponent<TextFieldComponent, TextFieldAssertions>
+		implements InlineEditable<TextFieldComponent> {
 
-	public TextFieldComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
-	}
-	
-	public TextFieldComponent edit() {
-		return this;
+	public TextFieldComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 
+	@Override
 	public CodebeamerLocator getValueElement() {
-		return this.locator(" + td.tableItem.textField");
+		return this.locator("");
 	}
 
 	@Override

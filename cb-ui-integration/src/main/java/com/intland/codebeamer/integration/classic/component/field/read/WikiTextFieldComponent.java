@@ -14,17 +14,24 @@ package com.intland.codebeamer.integration.classic.component.field.read;
 
 import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
+import com.intland.codebeamer.integration.classic.page.wiki.component.WikiContentComponent;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
 public class WikiTextFieldComponent
-		extends AbstractCodebeamerComponent<WikiTextFieldComponent, WikiTextFieldAssertions> {
+		extends AbstractCodebeamerComponent<WikiTextFieldComponent, WikiTextFieldAssertions>
+		implements InlineEditable<WikiTextFieldComponent> {
 
-	public WikiTextFieldComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
+	public WikiTextFieldComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 
-	public CodebeamerLocator getRichTextValueElement() {
-		return this.locator(" + td.textField span.wikiContent");
+	public WikiContentComponent getRichTextValue() {
+		return new WikiContentComponent(getCodebeamerPage(), getSelector("span.wikiContent"));
+	}
+
+	@Override
+	public CodebeamerLocator getValueElement() {
+		return getRichTextValue().getLocator();
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import java.util.Arrays;
 
 import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
+import com.intland.codebeamer.integration.classic.component.multiselect.MultiSelectMenuComponent;
 import com.intland.codebeamer.integration.classic.page.tracker.config.fields.DataSource;
 import com.intland.codebeamer.integration.classic.page.tracker.config.fields.FieldType;
 import com.intland.codebeamer.integration.classic.page.tracker.config.fields.MemberType;
@@ -30,6 +31,10 @@ public class FieldConfigDialog extends AbstractCodebeamerComponent<FieldConfigDi
 	@Override
 	public FieldConfigAssertions assertThat() {
 		return new FieldConfigAssertions(this);
+	}
+
+	public CodebeamerLocator getDialogTitleElement() {
+		return this.locator("span.ui-dialog-title");
 	}
 
 	public FieldConfigDialog setLabel(String label) {
@@ -48,8 +53,9 @@ public class FieldConfigDialog extends AbstractCodebeamerComponent<FieldConfigDi
 		return this;
 	}
 
-	public FieldConfigDialog setSharedField() {
-		// TODO
+	public FieldConfigDialog setSharedField(String... sharedFields) {
+		getSharedFieldElement().click();
+		getSharedFieldMultiselectMenuComponent().select(sharedFields);
 		return this;
 	}
 
@@ -214,9 +220,8 @@ public class FieldConfigDialog extends AbstractCodebeamerComponent<FieldConfigDi
 		return this.locator("td.dataCell select[name='type']");
 	}
 
-	public CodebeamerLocator getSharedFieldSelector() {
-		// TODO
-		return this.locator("");
+	public CodebeamerLocator getSharedFieldElement() {
+		return this.locator("div.sharedFieldSelector");
 	}
 
 	public CodebeamerLocator getListableCheckbox() {
@@ -246,8 +251,7 @@ public class FieldConfigDialog extends AbstractCodebeamerComponent<FieldConfigDi
 	}
 
 	public CodebeamerLocator getUnionCheckbox() {
-		// TODO
-		return this.locator("");
+		return this.locator("input[type='checkbox'][name='matchAny']");
 	}
 
 	public CodebeamerLocator getMemberSelector() {
@@ -306,8 +310,7 @@ public class FieldConfigDialog extends AbstractCodebeamerComponent<FieldConfigDi
 	}
 
 	public CodebeamerLocator getMandatoryIfInput() {
-		// TODO
-		return this.locator("");
+		return this.locator("td.dataCell textarea[name='mandatoryIfDependencyFormula']");
 	}
 
 	public CodebeamerLocator getMandatoryCheckbox() {
@@ -366,11 +369,15 @@ public class FieldConfigDialog extends AbstractCodebeamerComponent<FieldConfigDi
 		return this.locator("");
 	}
 
-	public void clickOk() {
-		this.locator("div.ui-dialog-buttonset button:has-text('OK')").click();
+	public MultiSelectMenuComponent getSharedFieldMultiselectMenuComponent() {
+		return new MultiSelectMenuComponent(getCodebeamerPage(), "globalTypeSelectMenu");
 	}
 
-	public void clickCancel() {
+	public void save() {
+		this.locatorByTestId("fieldConfigurationOkButton").click();
+	}
+
+	public void cancel() {
 		this.locator("div.ui-dialog-buttonset button.cancelButton").click();
 	}
 }

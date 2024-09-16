@@ -8,11 +8,11 @@ import com.intland.swagger.client.internal.ApiClient;
 
 public class AbstractApiService {
 	
-	private final ApplicationConfiguration applicationConfiguration;
-
-	private final ApiUser apiUser;
+	protected final ApplicationConfiguration applicationConfiguration;
 
 	protected final DataManagerService dataManagerService;
+
+	private final ApiUser apiUser;
 
 	private ApiClient defaultApiClient;
 

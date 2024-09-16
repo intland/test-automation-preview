@@ -5,38 +5,43 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
 import com.intland.codebeamer.integration.CodebeamerPage;
-import com.intland.codebeamer.integration.api.service.tracker.Tracker;
+import com.intland.codebeamer.integration.api.service.tracker.TrackerId;
 import com.intland.codebeamer.integration.api.service.trackeritem.TrackerItemId;
 import com.intland.codebeamer.integration.classic.page.trackeritem.TrackerItemPage;
 import com.intland.codebeamer.integration.sitemap.annotation.Action;
-import com.intland.codebeamer.integration.test.testdata.DataManagerService;
 
 public class TrackerItemCreatePageNavigation {
 
-	private DataManagerService dataManagerService;
+	private static final String TRACKER_ITEM_URL_PATTERN = ".*/(issue|item)/.*";
 
 	private CodebeamerPage codebeamerPage;
 
-	private Tracker tracker;
+	private TrackerId trackerId;
 
-	public TrackerItemCreatePageNavigation(DataManagerService dataManagerService, CodebeamerPage codebeamerPage, Tracker tracker) {
-		this.dataManagerService = dataManagerService;
+	private String frameLocator;
+
+	public TrackerItemCreatePageNavigation(CodebeamerPage codebeamerPage, TrackerId trackerId) {
+		this(codebeamerPage, trackerId, null);
+	}
+
+	public TrackerItemCreatePageNavigation(CodebeamerPage codebeamerPage, TrackerId trackerId, String frameLocator) {
 		this.codebeamerPage = codebeamerPage;
-		this.tracker = tracker;
+		this.trackerId = trackerId;
+		this.frameLocator = frameLocator;
 	}
 
 	@Action("redirectedToTrackerItemCreatePage")
 	public TrackerItemCreatePage redirectedToTrackerItemCreatePage() {
-		return new TrackerItemCreatePage(dataManagerService, codebeamerPage, tracker).isActive();
+		return new TrackerItemCreatePage(codebeamerPage, trackerId, frameLocator).isActive();
 	}
 
 	@Action("redirectedToTrackerItemPage")
 	public TrackerItemPage redirectedToTrackerItemPage() {
-		return new TrackerItemPage(codebeamerPage, getTrackerItemId()).isActive();
+		return new TrackerItemPage(codebeamerPage, trackerId, getTrackerItemId()).isActive();
 	}
 
 	private TrackerItemId getTrackerItemId() {
-		codebeamerPage.waitForURL("/issue/*");
+		codebeamerPage.waitForUrlRegexp(TRACKER_ITEM_URL_PATTERN);
 		String pageUrl = codebeamerPage.getPageUrl();
 		return new TrackerItemId(Integer
 				.valueOf(Objects.requireNonNull(getIdFromUrl(pageUrl), "ID of tracker item cannot be computed from %s".formatted(pageUrl)))

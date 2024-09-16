@@ -8,7 +8,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import com.intland.codebeamer.integration.api.service.usergroup.UserGroup;
 import com.intland.codebeamer.integration.api.service.usergroup.UserGroupApiService;
 import com.intland.codebeamer.integration.api.service.usergroup.UserGroupId;
-import com.intland.codebeamer.integration.api.service.usergroup.UserGroupPermission;
+import com.intland.codebeamer.integration.common.usergroup.UserGroupPermission;
 
 public class UserBuilder {
 
@@ -71,6 +71,16 @@ public class UserBuilder {
 	
 	public UserBuilder addToProjectCategoryAdminGroup() {
 		this.groups.add(this.userGroupApiService.createProjectCategoryAdminGroupIfMissing().name());
+		return this;
+	}
+
+	public UserBuilder addToAccountAdminGroup() {
+		this.groups.add(this.userGroupApiService.createAccountAdminGroupIfMissing().name());
+		return this;
+	}
+
+	public UserBuilder addToReviewAdminGroup() {
+		this.groups.add(this.userGroupApiService.createReviewAdminGroupIfMissing().name());
 		return this;
 	}
 

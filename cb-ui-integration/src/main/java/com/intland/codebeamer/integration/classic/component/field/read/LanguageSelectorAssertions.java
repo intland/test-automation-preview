@@ -40,7 +40,7 @@ public class LanguageSelectorAssertions extends AbstractCodebeamerComponentAsser
 		String languageAsString = Arrays.stream(languages).map(Language::toString).collect(Collectors.joining());
 		return assertAll("Languages should be found: %s".formatted(languageAsString),
 				() -> {
-					assertThat(getComponent().getValueContainerElement()).isAttached();
+					assertThat(getComponent().getValueElement()).isAttached();
 					MatcherAssert.assertThat(getComponent().getLanguages(), matcher);
 				});
 	}

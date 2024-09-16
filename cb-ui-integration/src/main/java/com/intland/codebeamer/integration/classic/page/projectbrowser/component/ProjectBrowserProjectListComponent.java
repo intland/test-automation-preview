@@ -2,18 +2,18 @@ package com.intland.codebeamer.integration.classic.page.projectbrowser.component
 
 import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
-import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
+import com.intland.codebeamer.integration.classic.component.tab.TabId;
 
 public class ProjectBrowserProjectListComponent
-		extends AbstractCodebeamerComponent<ProjectBrowserProjectListComponent, ProjectBrowserProjectListAssertion> {
+		extends AbstractProjectBrowserTab<ProjectBrowserProjectListComponent, ProjectBrowserProjectListAssertion> {
 
 	public ProjectBrowserProjectListComponent(CodebeamerPage codebeamerPage) {
-		super(codebeamerPage, "#project-browser-tabs #project-categories");
+		super(codebeamerPage, new TabId("#project-categories"));
 	}
 
 	public ProjectBrowserProjectListComponent dragAndDropProjectTo(String projectName, CodebeamerLocator target) {
 		this.getProjectCardDragAndDropHandlerByName(projectName).drag(target, 10);
-		this.waitForResponse(responseEndsWith("/projects/projectCategoryList.spr"), 200);
+		this.waitForResponse(urlEndsWith("/projects/projectCategoryList.spr"), 200);
 		return this;
 	}
 
@@ -41,5 +41,4 @@ public class ProjectBrowserProjectListComponent
 	public ProjectBrowserProjectListAssertion assertThat() {
 		return new ProjectBrowserProjectListAssertion(this);
 	}
-
 }

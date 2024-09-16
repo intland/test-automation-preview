@@ -32,7 +32,7 @@ public class RoleAndMemberSelectorAssertions
 		String memberAsString = Arrays.stream(members).map(Member::toString).collect(Collectors.joining(","));
 		return assertAll("The fields should contains the following items: %s".formatted(memberAsString),
 				() -> {
-					assertThat(getComponent().getMemberContainer()).isAttached();
+					assertThat(getComponent().getValueElement()).isAttached();
 					MatcherAssert.assertThat(getComponent().getMembers(), Matchers.hasItems(members));
 				});
 	}
@@ -42,7 +42,7 @@ public class RoleAndMemberSelectorAssertions
 				.collect(Collectors.joining(","));
 		return assertAll("The field should contains the following items in the following order: %s".formatted(memberAsString),
 				() -> {
-					assertThat(getComponent().getMemberContainer()).isAttached();
+					assertThat(getComponent().getValueElement()).isAttached();
 					MatcherAssert.assertThat(getComponent().getMembers(), Matchers.contains(members));
 				});
 	}

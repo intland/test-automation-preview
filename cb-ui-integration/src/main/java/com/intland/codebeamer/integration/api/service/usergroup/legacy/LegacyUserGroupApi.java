@@ -11,7 +11,7 @@ import com.intland.codebeamer.integration.api.legacy.AbstractLegacyApi;
 import com.intland.codebeamer.integration.api.legacy.LegacyApiException;
 import com.intland.codebeamer.integration.api.service.usergroup.UserGroup;
 import com.intland.codebeamer.integration.api.service.usergroup.UserGroupId;
-import com.intland.codebeamer.integration.api.service.usergroup.UserGroupPermission;
+import com.intland.codebeamer.integration.common.usergroup.UserGroupPermission;
 import com.intland.codebeamer.integration.configuration.ApplicationConfiguration;
 
 public class LegacyUserGroupApi extends AbstractLegacyApi {
@@ -44,8 +44,8 @@ public class LegacyUserGroupApi extends AbstractLegacyApi {
 		return Integer.valueOf(StringUtils.substringAfterLast(response.uri(), '/'));
 	}
 	
-	record CreateUserGroupResponse(String uri, String name) implements Serializable {};
+	record CreateUserGroupResponse(String uri, String name) implements Serializable {}
 
-	record CreateUserGroupRequest(String name, String description, List<Integer> permissions) implements Serializable {};
+	record CreateUserGroupRequest(String name, String description, List<Integer> permissions) implements Serializable {}
 	
 }

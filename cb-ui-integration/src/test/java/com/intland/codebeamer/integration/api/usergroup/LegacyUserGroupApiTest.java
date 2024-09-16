@@ -1,6 +1,6 @@
 package com.intland.codebeamer.integration.api.usergroup;
 
-import static com.intland.codebeamer.integration.api.service.usergroup.UserGroupPermission.SYSTEM_ADMIN;
+import static com.intland.codebeamer.integration.common.usergroup.UserGroupPermission.SYSTEM_ADMIN;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;

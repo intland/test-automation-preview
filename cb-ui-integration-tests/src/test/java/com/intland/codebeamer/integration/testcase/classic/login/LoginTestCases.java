@@ -15,6 +15,7 @@ package com.intland.codebeamer.integration.testcase.classic.login;
 import org.testng.annotations.Test;
 
 import com.intland.codebeamer.integration.api.service.user.User;
+import com.intland.codebeamer.integration.classic.page.login.component.LoginFormAssertions;
 import com.intland.codebeamer.integration.test.AbstractIntegrationClassicNGTests;
 
 @Test(groups = "LoginTestCases")
@@ -26,7 +27,7 @@ public class LoginTestCases extends AbstractIntegrationClassicNGTests {
 	
 	@Override
 	protected void generateDataBeforeClass() throws Exception {	
-		activeUser = getDataManagerService().getUserApiService().createUser()
+		activeUser = getDataManagerService().getUserApiServiceWithConfigUser().createUser()
 				.addToRegularUserGroup()
 				.addToProjectCategoryAdminGroup()
 				.build();
@@ -37,6 +38,19 @@ public class LoginTestCases extends AbstractIntegrationClassicNGTests {
 	@Override
 	protected void cleanUpDataAfterClass() throws Exception {
 
+	}
+
+	@Test(description = "User is able to visit login page")
+	public void loginPageCanBeLoaded() {
+		getClassicCodebeamerApplication()
+				.visitLoginPage();
+	}
+
+	@Test(description = "User is able to use login form")
+	public void loginFormIsReady() {
+		getClassicCodebeamerApplication()
+				.visitLoginPage()
+				.assertLoginFormComponent(LoginFormAssertions::isReady);
 	}
 	
 	@Test(description = "User is not able to authenticate when user credentials are invalid")

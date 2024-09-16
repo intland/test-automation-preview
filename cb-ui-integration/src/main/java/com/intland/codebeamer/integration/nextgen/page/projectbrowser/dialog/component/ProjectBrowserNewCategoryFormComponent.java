@@ -8,7 +8,7 @@ public class ProjectBrowserNewCategoryFormComponent
 		extends AbstractCodebeamerComponent<ProjectBrowserNewCategoryFormComponent, ProjectBrowserNewCategoryFormAssertion> {
 
 	public ProjectBrowserNewCategoryFormComponent(CodebeamerPage codebeamerPage, String frameLocator) {
-		super(codebeamerPage, frameLocator, "form");
+		super(codebeamerPage, frameLocator + "form");
 	}
 
 	public ProjectBrowserNewCategoryFormComponent createCategory(String categoryName) {

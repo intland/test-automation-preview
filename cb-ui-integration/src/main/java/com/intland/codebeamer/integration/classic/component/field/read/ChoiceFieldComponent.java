@@ -16,18 +16,16 @@ import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
-public class ChoiceFieldComponent extends AbstractCodebeamerComponent<ChoiceFieldComponent, ChoiceFieldAssertions> {
+public class ChoiceFieldComponent extends AbstractCodebeamerComponent<ChoiceFieldComponent, ChoiceFieldAssertions>
+		implements InlineEditable<ChoiceFieldComponent> {
 
-	public ChoiceFieldComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
+	public ChoiceFieldComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 
-	public ChoiceFieldComponent edit() {
-		return this;
-	}
-	
+	@Override
 	public CodebeamerLocator getValueElement() {
-		return this.locator(" + td.tableItem");
+		return this.locator("");
 	}
 
 	@Override

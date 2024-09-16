@@ -3,15 +3,17 @@ package com.intland.codebeamer.integration.test;
 import com.intland.codebeamer.integration.api.service.user.User;
 import com.intland.codebeamer.integration.api.service.user.UserApiService;
 import com.intland.codebeamer.integration.application.ClassicCodebeamerApplication;
-import com.intland.codebeamer.integration.test.testdata.DataManagerService;
 
 public abstract class AbstractIntegrationClassicNGTests extends AbstractIntegrationNGTests {
 
+	private User user;
+
 	public ClassicCodebeamerApplication getClassicCodebeamerApplication() {
-		return new ClassicCodebeamerApplication(getCodebeamerPage(), new DataManagerService(getApplicationConfiguration()));
+		return new ClassicCodebeamerApplication(getCodebeamerPage(), this.user);
 	}
 	
 	public ClassicCodebeamerApplication getClassicCodebeamerApplication(User userDetails) {
+		this.user = userDetails;
 		return getClassicCodebeamerApplication(userDetails.getName(), UserApiService.DEFAULT_PASSWORD);
 	}
 	
@@ -20,15 +22,8 @@ public abstract class AbstractIntegrationClassicNGTests extends AbstractIntegrat
 	}
 	
 	public ClassicCodebeamerApplication getClassicCodebeamerApplication(String username, String password) {
-		ClassicCodebeamerApplication classicCodebeamerApplication = getClassicCodebeamerApplication();
-		
-		classicCodebeamerApplication
-			.visitLoginPage()
-			.getLoginFormComponent()
-			.login(username, password)
-			.redirectedToUserMyWikiPage();
-		
-		return classicCodebeamerApplication;
+		authenticate(username, password);
+		return getClassicCodebeamerApplication();
 	}
-	
+
 }

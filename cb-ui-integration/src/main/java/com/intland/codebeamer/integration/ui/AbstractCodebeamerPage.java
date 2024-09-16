@@ -16,6 +16,7 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
@@ -80,13 +81,22 @@ public abstract class AbstractCodebeamerPage<P extends AbstractCodebeamerPage> {
 	protected void assertUrl(String expectedPagePath, String message) {
 		getCodebeamerPage().getAssertions().assertUrl(expectedPagePath, message);
 	}
-	
+
+	protected void assertUrl(Pattern expectedPagePathPattern, String message) {
+		getCodebeamerPage().getAssertions().assertUrl(expectedPagePathPattern, message);
+	}
+
 	protected CodebeamerPage getCodebeamerPage() {
 		return codebeamerPage;
 	}
 
 	public void pause() {
 		getCodebeamerPage().pause();
+	}
+
+	public P pressKey(String key) {
+		getCodebeamerPage().pressKey(key);
+		return (P) this;
 	}
 	
 	private P log(Level level, Function<P, String> message) {

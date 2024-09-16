@@ -12,10 +12,8 @@
 
 package com.intland.codebeamer.integration.classic.page.projectbrowser.component;
 
-import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponentAssert;
-
 public class ProjectBrowserProjectListAssertion extends
-		AbstractCodebeamerComponentAssert<ProjectBrowserProjectListComponent, ProjectBrowserProjectListAssertion> {
+		AbstractProjectBrowserTabAssertions<ProjectBrowserProjectListComponent, ProjectBrowserProjectListAssertion> {
 
 	ProjectBrowserProjectListAssertion(ProjectBrowserProjectListComponent component) {
 		super(component);

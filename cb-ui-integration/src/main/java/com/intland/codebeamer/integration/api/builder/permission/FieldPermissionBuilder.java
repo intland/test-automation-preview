@@ -17,7 +17,7 @@ import java.util.List;
 
 public class FieldPermissionBuilder {
 
-	List<TrackerFieldPermission> permissions = new ArrayList<>();
+	private final List<TrackerFieldPermission> permissions = new ArrayList<>();
 
 	public FieldPermissionBuilder addReadAccessForField(String fieldName) {
 		permissions.add(new TrackerFieldPermission(fieldName, SubjectType.FIELD, AccessLevel.READ, null));

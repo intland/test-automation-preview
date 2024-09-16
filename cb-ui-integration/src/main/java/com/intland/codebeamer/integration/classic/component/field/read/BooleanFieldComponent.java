@@ -16,18 +16,16 @@ import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
-public class BooleanFieldComponent extends AbstractCodebeamerComponent<BooleanFieldComponent, BooleanFieldAssertions> {
+public class BooleanFieldComponent extends AbstractCodebeamerComponent<BooleanFieldComponent, BooleanFieldAssertions>
+		implements InlineEditable<BooleanFieldComponent> {
 
-	public BooleanFieldComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
-	}
-	
-	public BooleanFieldComponent edit() {
-		return this;
+	public BooleanFieldComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 
+	@Override
 	public CodebeamerLocator getValueElement() {
-		return this.locator(" + td.tableItem");
+		return this.locator("");
 	}
 
 	@Override

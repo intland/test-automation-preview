@@ -18,11 +18,13 @@ import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.classic.page.dashboard.child.AbstractDashboardNewChildDialog;
 import com.intland.codebeamer.integration.classic.page.user.child.dashboard.component.UserDashboardNewChildDialogFormAssertions;
 import com.intland.codebeamer.integration.classic.page.user.child.dashboard.component.UserDashboardNewChildDialogFormComponent;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 
 public class UserDashboardNewChildDialog
 		extends
 		AbstractDashboardNewChildDialog<UserDashboardNewChildDialogFormComponent, UserDashboardNewChildDialogFormAssertions> {
 
+	@Component("New child wiki dialog")
 	private final UserDashboardNewChildDialogFormComponent dashboardNewChildDialogFormComponent;
 
 	public UserDashboardNewChildDialog(CodebeamerPage codebeamerPage) {

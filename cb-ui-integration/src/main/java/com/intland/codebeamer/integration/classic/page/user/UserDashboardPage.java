@@ -18,13 +18,16 @@ import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.classic.page.user.component.actionbar.dashboard.UserDashboardActionbarComponent;
 import com.intland.codebeamer.integration.classic.page.user.component.tree.UserTreeComponent;
 import com.intland.codebeamer.integration.classic.page.wiki.AbstractWikiDashboardPage;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 import com.intland.codebeamer.integration.sitemap.annotation.Page;
 
 @Page("UserWikiPage")
 public class UserDashboardPage extends AbstractWikiDashboardPage {
 
+	@Component("Action bar")
 	private final UserDashboardActionbarComponent actionbarComponent;
 
+	@Component("Wiki tree")
 	private final UserTreeComponent userTreeComponent;
 
 	public UserDashboardPage(CodebeamerPage codebeamerPage) {

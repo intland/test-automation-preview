@@ -12,7 +12,11 @@
 
 package com.intland.codebeamer.integration.classic.page.tracker.config.component;
 
+import java.util.function.Consumer;
+
 import com.intland.codebeamer.integration.CodebeamerPage;
+import com.intland.codebeamer.integration.classic.page.tracker.config.component.statetransition.StateTransitionComponent;
+import com.intland.codebeamer.integration.classic.page.tracker.config.component.statetransition.StateTransitionDialogComponent;
 
 public class TrackerConfigStateTransitionsTab extends AbstractTrackerConfigTab<TrackerConfigStateTransitionsTab, TrackerConfigStateTransitionsAssertions> {
 
@@ -35,4 +39,21 @@ public class TrackerConfigStateTransitionsTab extends AbstractTrackerConfigTab<T
 		return "#adminTransitionPermissionForm";
 	}
 
+	public StateTransitionComponent stateTransition(String from, String to) {
+		return new StateTransitionComponent(getCodebeamerPage(), from, to);
+	}
+
+	public StateTransitionDialogComponent openNewStateTransitionDialog() {
+		this.locator("div.moreStateTransitions .eventSelector").selectOption("0");
+		return getStateTransitionDialogComponent();
+	}
+
+	public TrackerConfigStateTransitionsTab newStateTransitionDialog(Consumer<StateTransitionDialogComponent> formConsumer) {
+		formConsumer.accept(getStateTransitionDialogComponent());
+		return this;
+	}
+
+	private StateTransitionDialogComponent getStateTransitionDialogComponent() {
+		return new StateTransitionDialogComponent(getCodebeamerPage(), ".ui-dialog");
+	}
 }

@@ -13,17 +13,16 @@
 package com.intland.codebeamer.integration.classic.page.user.component.tree;
 
 import com.intland.codebeamer.integration.CodebeamerPage;
-import com.intland.codebeamer.integration.classic.page.wiki.component.tree.AbstractTreeAssertions;
 import com.intland.codebeamer.integration.classic.page.wiki.component.tree.AbstractTreeComponent;
 
-public class UserTreeComponent extends AbstractTreeComponent {
+public class UserTreeComponent extends AbstractTreeComponent<UserTreeComponent, UserTreeAssertions> {
 
 	public UserTreeComponent(CodebeamerPage codebeamerPage) {
 		super(codebeamerPage);
 	}
 
 	@Override
-	public AbstractTreeAssertions assertThat() {
+	public UserTreeAssertions assertThat() {
 		return new UserTreeAssertions(this);
 	}
 }

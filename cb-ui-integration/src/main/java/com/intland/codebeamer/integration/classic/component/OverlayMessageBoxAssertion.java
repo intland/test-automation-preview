@@ -36,4 +36,19 @@ public class OverlayMessageBoxAssertion extends AbstractCodebeamerComponentAsser
 			assertThat(getComponent().getSuccessMessageElement()).isVisible(new IsVisibleOptions().setTimeout(ONE_SECOND_AS_MILLIS));
 		});
 	}
+
+	public OverlayMessageBoxAssertion hasSuccess(String message) {
+		return assertAll("Success message should be visible with text '%s'".formatted(message), () -> {
+			getComponent().sleep(2);
+			assertThat(getComponent().getErrorMessageElement()).not().isVisible(new IsVisibleOptions().setTimeout(ONE_SECOND_AS_MILLIS));
+			assertThat(getComponent().getSuccessMessageElement()).isVisible(new IsVisibleOptions().setTimeout(ONE_SECOND_AS_MILLIS));
+			assertThat(getComponent().getSuccessMessageElement()).hasText(message);
+		});
+	}
+
+	public OverlayMessageBoxAssertion hasTrackerItemInSuccessMessage() {
+		return this.hasSuccess().assertAll("Tracker item link should be available in the success message", () -> {
+			assertThat(getComponent().getTrackerItemLinkElementFromSuccessMessage()).isVisible();
+		});
+	}
 }

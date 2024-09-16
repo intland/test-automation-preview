@@ -190,14 +190,18 @@ public enum Language {
 	ZA("Zhuang"),
 	ZU("Zulu");
 	
-	private String name;
+	private final String name;
 	
-	private Language(String name) {
+	Language(String name) {
 		this.name = name;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getShortName() {
+		return name();
 	}
 
 	public static Language findByName(String name) {

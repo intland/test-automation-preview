@@ -40,7 +40,7 @@ public class CountrySelectorAssertions extends AbstractCodebeamerComponentAssert
 		String countriesAsString = Arrays.stream(countries).map(Country::toString).collect(Collectors.joining(", "));
 		return assertAll("Countries should be found: %s".formatted(countriesAsString),
 				() -> {
-					assertThat(getComponent().getValueContainerElement()).isAttached();
+					assertThat(getComponent().getValueElement()).isAttached();
 					MatcherAssert.assertThat(getComponent().getCountries(), matcher);
 				});
 	}

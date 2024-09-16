@@ -20,6 +20,7 @@ import static org.testng.Assert.assertTrue;
 import java.util.List;
 import java.util.Optional;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -44,74 +45,68 @@ public class BaselineApiServiceTest extends AbstractBaseNGTests {
 
 	private BaselineApiService baselineApiService;
 
+	private Project project;
+
 	@BeforeClass(alwaysRun = true)
 	public void setup() {
 		projectApiService = new ProjectApiService(getApplicationConfiguration());
 		trackerApiService = new TrackerApiService(getApplicationConfiguration());
 		baselineApiService = new BaselineApiService(getApplicationConfiguration());
+
+		project = projectApiService.createProjectFromTemplate();
+	}
+
+	@AfterClass(alwaysRun = true)
+	public void tearDown() {
+		projectApiService.deleteProject(project);
 	}
 
 	@Test(description = "Project baseline can be created via API")
 	public void createProjectBaselineViaApi() {
 		// Given
-		Project project = projectApiService.createProjectFromTemplate();
-		try {
 
-			// When
-			Baseline baseline = baselineApiService.createProjectBaseline("MyTestBaseline", project);
+		// When
+		Baseline baseline = baselineApiService.createProjectBaseline(getRandomText("MyTestBaseline"), project);
 
-			// Then
-			assertNotNull(baseline.id());
-			assertTrue(isProjectBaselineExists(Integer.valueOf(baseline.id().id()), project.id()));
-		} finally {
-			projectApiService.deleteProject(project.id());
-		}
+		// Then
+		assertNotNull(baseline.id());
+		assertTrue(isProjectBaselineExists(Integer.valueOf(baseline.id().id()), project.id()));
 	}
 
 	@Test(description = "Tracker baseline can be created via API")
 	public void createTrackerBaselineViaApi() {
 		// Given
-		Project project = projectApiService.createProjectFromTemplate();
 		Tracker taskTracker = trackerApiService.createDefaultTaskTracker(project, "MyTaskCustom");
-		try {
 
-			// When
-			Baseline baseline = baselineApiService.createTrackerBaseline("MyTestBaseline", project, taskTracker);
+		// When
+		String baselineName = getRandomText("MyTestBaseline");
+		Baseline baseline = baselineApiService.createTrackerBaseline(baselineName, project, taskTracker);
 
-			// Then
-			assertNotNull(baseline.id());
-			List<AbstractReference> taskTrackerBaselines = getTrackerBaselines(taskTracker.id());
-			Optional<AbstractReference> createdBaseline = taskTrackerBaselines.stream()
-					.filter(b -> Integer.valueOf(baseline.id().id()).equals(b.getId()))
-					.findFirst();
+		// Then
+		assertNotNull(baseline.id());
+		List<AbstractReference> taskTrackerBaselines = getTrackerBaselines(taskTracker.id());
+		Optional<AbstractReference> createdBaseline = taskTrackerBaselines.stream()
+				.filter(b -> Integer.valueOf(baseline.id().id()).equals(b.getId()))
+				.findFirst();
 
-			assertTrue(createdBaseline.isPresent());
-			assertEquals(createdBaseline.get().getName(), "MyTestBaseline");
-			assertTrue(createdBaseline
-					.filter(TrackerBaselineReference.class::isInstance)
-					.isPresent());
-		} finally {
-			projectApiService.deleteProject(project.id());
-		}
+		assertTrue(createdBaseline.isPresent());
+		assertEquals(createdBaseline.get().getName(), baselineName);
+		assertTrue(createdBaseline
+				.filter(TrackerBaselineReference.class::isInstance)
+				.isPresent());
 	}
 
 	@Test(description = "Baseline can be deleted via API")
 	public void deleteBaselineViaApi() {
 		// Given
-		Project project = projectApiService.createProjectFromTemplate();
-		try {
+		// When
+		Baseline baseline = baselineApiService.createProjectBaseline(getRandomText("MyTestBaseline"), project);
+		assertNotNull(baseline.id());
+		assertTrue(isProjectBaselineExists(Integer.valueOf(baseline.id().id()), project.id()));
 
-			// When
-			Baseline baseline = baselineApiService.createProjectBaseline("MyTestBaseline", project);
-			assertNotNull(baseline.id());
-			assertTrue(isProjectBaselineExists(Integer.valueOf(baseline.id().id()), project.id()));
-
-			// Then
-			baselineApiService.deleteBaseline(baseline.id());
-			assertFalse(isProjectBaselineExists(Integer.valueOf(baseline.id().id()), project.id()));
-		} finally {
-			projectApiService.deleteProject(project.id());
-		}
+		// Then
+		baselineApiService.deleteBaseline(baseline.id());
+		assertFalse(isProjectBaselineExists(Integer.valueOf(baseline.id().id()), project.id()));
 	}
 
 	private boolean isProjectBaselineExists(Integer baselineId, ProjectId projectId) {

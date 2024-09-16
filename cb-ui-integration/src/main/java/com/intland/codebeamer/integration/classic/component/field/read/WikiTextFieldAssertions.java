@@ -22,12 +22,12 @@ public class WikiTextFieldAssertions extends AbstractCodebeamerComponentAssert<W
 
 	public WikiTextFieldAssertions is(String value) {
 		return assertAll("Field should have '%s' value".formatted(value),
-				() -> assertThat(getComponent().getRichTextValueElement()).hasText(value));
+				() -> assertThat(getComponent().getValueElement()).hasText(value));
 	}
 	
 	public WikiTextFieldAssertions contains(String value) {
 		return assertAll("Field should have '%s' value".formatted(value),
-				() -> assertThat(getComponent().getRichTextValueElement()).containsText(value));
+				() -> assertThat(getComponent().getValueElement()).containsText(value));
 	}
 
 }

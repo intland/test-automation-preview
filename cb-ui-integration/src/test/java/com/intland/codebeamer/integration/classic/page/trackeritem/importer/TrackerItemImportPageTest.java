@@ -18,6 +18,8 @@ import com.intland.codebeamer.integration.api.service.project.Project;
 import com.intland.codebeamer.integration.api.service.tracker.Tracker;
 import com.intland.codebeamer.integration.api.service.user.User;
 import com.intland.codebeamer.integration.classic.page.trackeritem.importer.component.TrackerItemImportFormComponent;
+import com.intland.codebeamer.integration.classic.page.trackeritem.importer.enums.CharsetName;
+import com.intland.codebeamer.integration.classic.page.trackeritem.importer.enums.FieldSeparator;
 import com.intland.codebeamer.integration.test.AbstractIntegrationClassicNGTests;
 
 @Test(groups = "TrackerItemImportPage")
@@ -31,7 +33,7 @@ public class TrackerItemImportPageTest extends AbstractIntegrationClassicNGTests
 
 	@Override
 	protected void generateDataBeforeClass() {
-		user = getDataManagerService().getUserApiService().createUser()
+		user = getDataManagerService().getUserApiServiceWithConfigUser().createUser()
 				.addToRegularUserGroup()
 				.build();
 		project = getDataManagerService().getProjectApiService(user).createProjectFromTemplate();
@@ -41,7 +43,7 @@ public class TrackerItemImportPageTest extends AbstractIntegrationClassicNGTests
 	@Override
 	protected void cleanUpDataAfterClass() {
 		getDataManagerService().getProjectApiService(user).deleteProject(project);
-		getDataManagerService().getUserApiService().disableUser(user);
+		getDataManagerService().getUserApiServiceWithConfigUser().disableUser(user);
 	}
 
 	@Test(description = "User is able to upload file")

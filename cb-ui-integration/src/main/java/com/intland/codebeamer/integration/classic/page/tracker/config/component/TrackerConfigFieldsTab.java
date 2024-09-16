@@ -52,7 +52,7 @@ public class TrackerConfigFieldsTab extends AbstractTrackerConfigTab<TrackerConf
 	 * Opens a new custom field dialog.
 	 *
 	 * <p>
-	 *     If you want to change the type, then you should either call {@link FieldConfigDialog#setTypeSelector(FieldType)}
+	 * If you want to change the type, then you should either call {@link FieldConfigDialog#setTypeSelector(FieldType)}
 	 * </p>
 	 * <pre>{@code
 	 * .trackerConfigFieldsTab(c -> c.newCustomField()
@@ -63,12 +63,12 @@ public class TrackerConfigFieldsTab extends AbstractTrackerConfigTab<TrackerConf
 	 * }</pre>
 	 *
 	 * <p>
-	 *     or use any of the dedicated methods in {@link TrackerConfigFieldsTab} e.g. {@link TrackerConfigFieldsTab#newLanguageField()}
+	 * or use any of the dedicated methods in {@link TrackerConfigFieldsTab} e.g. {@link TrackerConfigFieldsTab#newLanguageField()}
 	 * </p>
 	 * <pre>{@code
-     * 	.trackerConfigFieldsTab(c -> c.newLanguageField()
-     *				.setLabel("Lang field")
-     *				.clickOk())
+	 * 	.trackerConfigFieldsTab(c -> c.newLanguageField()
+	 * 				.setLabel("Lang field")
+	 * 				.clickOk())
 	 * }</pre>
 	 *
 	 * @return field config dialog object
@@ -155,6 +155,10 @@ public class TrackerConfigFieldsTab extends AbstractTrackerConfigTab<TrackerConf
 		return this.locator("select.more-fields-selector");
 	}
 
+	public CodebeamerLocator getFieldRow(int index) {
+		return this.locator("#trackerFields tbody:nth-child(%s) tr".formatted(1 + index));
+	}
+
 	private FieldConfigDialog openCustomFieldDialog() {
 		getMoreFieldsSelector().click();
 		getMoreFieldsSelector().selectOption("customField");
@@ -183,5 +187,9 @@ public class TrackerConfigFieldsTab extends AbstractTrackerConfigTab<TrackerConf
 	@Override
 	protected String getMainFormId() {
 		return "#trackerLayoutForm";
+	}
+
+	public CodebeamerLocator getRowFieldId(String fieldName) {
+		return this.locator("tr:has(td:has(span:has-text('%s')))".formatted(fieldName));
 	}
 }

@@ -16,6 +16,8 @@ import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.classic.page.user.child.dashboard.UserDashboardNewChildDialog;
 import com.intland.codebeamer.integration.classic.page.user.child.wiki.UserWikiNewChildDialog;
 import com.intland.codebeamer.integration.classic.page.wiki.component.actionbar.AbstractWikiDashboardActionbarComponent;
+import com.intland.codebeamer.integration.classic.page.wiki.component.actionbar.WikiDashboardMoreActionMenuComponent;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 
 public class UserDashboardActionbarComponent extends AbstractWikiDashboardActionbarComponent {
 
@@ -23,10 +25,14 @@ public class UserDashboardActionbarComponent extends AbstractWikiDashboardAction
 
 	private final UserDashboardNewChildDialog dashboardNewChildDialog;
 
+	@Component(value = "More menu", includeInSitemap = false)
+	private final WikiDashboardMoreActionMenuComponent moreActionMenuComponent;
+
 	public UserDashboardActionbarComponent(CodebeamerPage codebeamerPage) {
 		super(codebeamerPage);
 		dashboardNewChildDialog = new UserDashboardNewChildDialog(codebeamerPage);
 		wikiNewChildDialog = new UserWikiNewChildDialog(codebeamerPage);
+		moreActionMenuComponent = new WikiDashboardMoreActionMenuComponent(codebeamerPage, getSelector());
 	}
 
 	public UserWikiNewChildDialog createNewWiki() {
@@ -38,6 +44,12 @@ public class UserDashboardActionbarComponent extends AbstractWikiDashboardAction
 	public UserDashboardNewChildDialog createNewDashBoard() {
 		getDashboardCreateButton().click();
 		return dashboardNewChildDialog;
+	}
+
+	@Override
+	public WikiDashboardMoreActionMenuComponent openMoreActionMenu() {
+		getMoreActionButton().click();
+		return moreActionMenuComponent;
 	}
 
 	@Override

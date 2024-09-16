@@ -12,6 +12,8 @@
 
 package com.intland.codebeamer.integration.classic.page.tracker.config.fields;
 
+import java.util.Arrays;
+
 public enum MemberType {
 
 	USERS(2),
@@ -30,5 +32,13 @@ public enum MemberType {
 
 	public String getTypeIdAsString() {
 		return String.valueOf(typeId);
+	}
+
+	public static MemberType findById(int value) {
+		return Arrays.stream(MemberType.values())
+				.filter(type -> type.getTypeId().intValue() == value)
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException(
+						"MemberType cannot be found by id: %s".formatted(Integer.valueOf(value))));
 	}
 }

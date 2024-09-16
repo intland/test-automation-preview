@@ -12,7 +12,7 @@ public class AbstractCodebeamerNextGenDialogFooterComponent
 	private String cancelButtonLocator;
 
 	public AbstractCodebeamerNextGenDialogFooterComponent(CodebeamerPage codebeamerPage, String frameLocator, String saveButtonLocator, String cancelButtonLocator) {
-		super(codebeamerPage, frameLocator, "div.p-dialog-footer p-footer");
+		super(codebeamerPage, frameLocator + "div.p-dialog-footer p-footer");
 		this.saveButtonLocator = saveButtonLocator;
 		this.cancelButtonLocator = cancelButtonLocator;
 	}

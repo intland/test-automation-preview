@@ -25,8 +25,12 @@ public class UriPathBuilder {
 		return StringUtils.removeEnd(pathBuilder.toString(), SLASH);
 	}
 	
-	public URI buildURI() throws URISyntaxException {
-		return new URI(build());
+	public URI buildURI()  {
+		try {
+			return new URI(build());
+		} catch (URISyntaxException e) {
+			throw new IllegalStateException(e.getMessage(), e);
+		}
 	}
 
 	private String cleanUrl(String url) {

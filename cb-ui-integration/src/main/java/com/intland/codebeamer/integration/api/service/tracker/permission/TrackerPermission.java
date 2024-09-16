@@ -10,6 +10,8 @@ public enum TrackerPermission {
 	// You must not remove or change order of permissions, you can only add new permissions at the end !!
 
 	ISSUE_VIEW_NOT_OWN,
+
+	/** On UI: Item - Edit Any */
 	ISSUE_EDIT_NOT_OWN,
 	ISSUE_VIEW,
 	ISSUE_ADD,
@@ -75,9 +77,7 @@ public enum TrackerPermission {
 	/** Permission to handle data administration tasks e.g. reqif import */
 	DATA_ADMINISTRATION;
 
-	/**
-	 * Get the minimum permissions a project admin should have on any tracker in his project
-	 */
+	/** Get the minimum permissions a project admin should have on any tracker in his project */
 	public static List<TrackerPermission> getProjectAdminAccess() {
 		return List.of(ISSUE_VIEW, ISSUE_VIEW_NOT_OWN, ISSUE_HISTORY_VIEW, ISSUE_ESCALATION_VIEW, ISSUE_ATTACHMENT_VIEW,
 				ISSUE_SUBSCRIBE, ISSUE_SUBSCRIBE_OTHERS, TRACKER_SUBSCRIBE, TRACKER_SUBSCRIBE_OTHERS, TRACKER_SUBSCRIBERS_VIEW,

@@ -13,6 +13,7 @@
 package com.intland.codebeamer.integration.classic.component;
 
 import java.time.Duration;
+import java.util.regex.Pattern;
 
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponentAssert;
 import com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions;
@@ -37,6 +38,11 @@ public class FroalaComponentAssertions extends AbstractCodebeamerComponentAssert
 				() -> assertThat(getComponent().getRichTextValueElement()).hasText(value));
 	}
 
+	public FroalaComponentAssertions containsText(String value) {
+		return assertAll("Editor should contain '%s'".formatted(value),
+				() -> assertThat(getComponent().getRichTextValueElement()).containsText(value));
+	}
+
 	public FroalaComponentAssertions isRichTextModeActive() {
 		return isRichTextModeActive(null);
 	}
@@ -44,10 +50,20 @@ public class FroalaComponentAssertions extends AbstractCodebeamerComponentAssert
 	public FroalaComponentAssertions isRichTextModeActive(Duration timeout) {
 		return assertAll("RichText mode should be selected", () -> {
 			assertThat(getComponent().getRichTextElement()).isVisible(createVisibleOptions(timeout));
-			assertThat(getComponent().getRichTextElement()).hasClass("cb-button-active");
+			assertThat(getComponent().getRichTextElement()).hasClass(Pattern.compile("cb-button-active"));
 		});
 	}
-	
+
+	public FroalaComponentAssertions isRichTextOptionsToolbarIsVisible() {
+		return assertAll("RichText toolbar should be visible",
+				() -> assertThat(getComponent().getRichTextOptionsElement()).hasClass(Pattern.compile("cb-button-active")));
+	}
+
+	public FroalaComponentAssertions isRichTextOptionsToolbarIsHidden() {
+		return assertAll("RichText toolbar should be hidden",
+				() -> assertThat(getComponent().getRichTextElement()).hasClass(Pattern.compile("cb-button-active")));
+	}
+
 	public FroalaComponentAssertions isMarkUpModeActive() {
 		return isMarkUpModeActive(null);
 	}
@@ -55,7 +71,7 @@ public class FroalaComponentAssertions extends AbstractCodebeamerComponentAssert
 	public FroalaComponentAssertions isMarkUpModeActive(Duration timeout) {
 		return assertAll("MarkUp mode should be selected", () -> {
 			assertThat(getComponent().getMarkupElement()).isVisible(createVisibleOptions(timeout));
-			assertThat(getComponent().getMarkupElement()).hasClass("cb-button-active");
+			assertThat(getComponent().getMarkupElement()).hasClass(Pattern.compile("cb-button-active"));
 		});
 	}
 

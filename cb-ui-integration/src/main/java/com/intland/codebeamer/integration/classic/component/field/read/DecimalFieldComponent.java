@@ -16,18 +16,16 @@ import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
-public class DecimalFieldComponent extends AbstractCodebeamerComponent<DecimalFieldComponent, DecimalFieldAssertions> {
+public class DecimalFieldComponent extends AbstractCodebeamerComponent<DecimalFieldComponent, DecimalFieldAssertions>
+		implements InlineEditable<DecimalFieldComponent> {
 
-	public DecimalFieldComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
-	}
-	
-	public DecimalFieldComponent edit() {
-		return this;
+	public DecimalFieldComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 
+	@Override
 	public CodebeamerLocator getValueElement() {
-		return this.locator(" + td.tableItem");
+		return this.locator("");
 	}
 
 	@Override

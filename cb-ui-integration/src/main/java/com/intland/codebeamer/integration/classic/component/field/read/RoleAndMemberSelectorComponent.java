@@ -26,14 +26,15 @@ import com.intland.codebeamer.integration.api.service.user.User;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
 public class RoleAndMemberSelectorComponent
-		extends AbstractCodebeamerComponent<RoleAndMemberSelectorComponent, RoleAndMemberSelectorAssertions> {
+		extends AbstractCodebeamerComponent<RoleAndMemberSelectorComponent, RoleAndMemberSelectorAssertions>
+		implements InlineEditable<RoleAndMemberSelectorComponent> {
 
 	private static final String ROLE_PATTERN = "\\[ROLE:(\\d+)\\] (\\w+)";
 
 	private static final String USER_PATTERN = "\\[USER:(\\d+)\\]";
 
-	public RoleAndMemberSelectorComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
+	public RoleAndMemberSelectorComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 	
 	public List<Member> getMembers() {
@@ -45,11 +46,12 @@ public class RoleAndMemberSelectorComponent
 	}
 
 	public CodebeamerLocator getMemberElements() {
-		return this.locator(" + td.tableItem a[data-wikilink^='[USER'],span[title^='[ROLE']");
+		return this.locator(" a[data-wikilink^='[USER'],span[title^='[ROLE']");
 	}
 
-	public CodebeamerLocator getMemberContainer() {
-		return this.locator(" + td.tableItem div.choice-field-wrapper");
+	@Override
+	public CodebeamerLocator getValueElement() {
+		return this.locator(" div.choice-field-wrapper");
 	}
 
 	@Override

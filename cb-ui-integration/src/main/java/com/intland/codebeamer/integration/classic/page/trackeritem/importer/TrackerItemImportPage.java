@@ -20,6 +20,7 @@ import com.intland.codebeamer.integration.classic.component.OverlayMessageBoxCom
 import com.intland.codebeamer.integration.classic.page.trackeritem.importer.component.TrackerItemImportFormAssertions;
 import com.intland.codebeamer.integration.classic.page.trackeritem.importer.component.TrackerItemImportFormComponent;
 import com.intland.codebeamer.integration.sitemap.annotation.Action;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 import com.intland.codebeamer.integration.sitemap.annotation.Page;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerPage;
 
@@ -30,15 +31,20 @@ public class TrackerItemImportPage extends AbstractCodebeamerPage<TrackerItemImp
 
 	private final Tracker tracker;
 
+	@Component("Overlay messages")
+	private final OverlayMessageBoxComponent overlayMessageBoxComponent;
+
+	@Component("Import tracker item form")
 	private final TrackerItemImportFormComponent trackerItemImportFormComponent;
 
-	private final OverlayMessageBoxComponent overlayMessageBoxComponent;
+	private final TrackerItemImportPageNavigation trackerItemImportPageNavigation;
 
 	public TrackerItemImportPage(CodebeamerPage codebeamerPage, Tracker tracker) {
 		super(codebeamerPage);
 		this.tracker = tracker;
 		this.trackerItemImportFormComponent = new TrackerItemImportFormComponent(codebeamerPage);
-		this.overlayMessageBoxComponent = new OverlayMessageBoxComponent(getCodebeamerPage());
+		this.overlayMessageBoxComponent = new OverlayMessageBoxComponent(codebeamerPage);
+		this.trackerItemImportPageNavigation = new TrackerItemImportPageNavigation(codebeamerPage, tracker);
 	}
 
 	@Action("Visit")
@@ -66,6 +72,11 @@ public class TrackerItemImportPage extends AbstractCodebeamerPage<TrackerItemImp
 	public TrackerItemImportPage overlayMessageBoxComponent(Consumer<OverlayMessageBoxComponent> formConsumer) {
 		formConsumer.accept(overlayMessageBoxComponent);
 		return this;
+	}
+
+	public TrackerItemImportPageNavigation next() {
+		trackerItemImportFormComponent.getNextLocator().click();
+		return trackerItemImportPageNavigation;
 	}
 
 	private String formatUrl() {

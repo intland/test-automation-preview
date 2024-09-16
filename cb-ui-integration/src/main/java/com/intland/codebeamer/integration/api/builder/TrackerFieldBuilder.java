@@ -18,37 +18,39 @@ import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import com.google.common.cache.LoadingCache;
 import com.intland.codebeamer.integration.api.builder.alloweddefault.AllowedDefaultValue;
 import com.intland.codebeamer.integration.api.builder.alloweddefault.AllowedValueBuilder;
 import com.intland.codebeamer.integration.api.builder.alloweddefault.DefaultValueBuilder;
 import com.intland.codebeamer.integration.api.builder.alloweddefault.ValueType;
+import com.intland.codebeamer.integration.api.builder.dependency.FieldDependencyBuilder;
 import com.intland.codebeamer.integration.api.builder.permission.FieldPermissionBuilder;
 import com.intland.codebeamer.integration.api.builder.permission.SubjectType;
 import com.intland.codebeamer.integration.api.builder.permission.TrackerFieldPermission;
 import com.intland.codebeamer.integration.api.service.project.Project;
 import com.intland.codebeamer.integration.api.service.project.ProjectApiService;
 import com.intland.codebeamer.integration.api.service.role.RoleApiService;
+import com.intland.codebeamer.integration.api.service.sharedfield.SharedField;
+import com.intland.codebeamer.integration.api.service.sharedfield.SharedFieldApiService;
+import com.intland.codebeamer.integration.api.service.sharedfield.SharedFieldId;
 import com.intland.codebeamer.integration.api.service.tracker.Tracker;
-import com.intland.codebeamer.integration.api.service.tracker.TrackerId;
+import com.intland.codebeamer.integration.api.service.trackeritem.TrackerItem;
 import com.intland.codebeamer.integration.api.service.trackeritem.TrackerItemApiService;
-import com.intland.codebeamer.integration.api.service.trackeritem.TrackerItemId;
 import com.intland.codebeamer.integration.api.service.user.UserApiService;
 import com.intland.swagger.client.model.ChoiceOptionReference;
-import com.intland.swagger.client.model.FieldReference;
 import com.intland.swagger.client.model.PerStatusFieldPermission;
 import com.intland.swagger.client.model.SameAsFieldPermission;
 import com.intland.swagger.client.model.SingleFieldPermission;
 import com.intland.swagger.client.model.TrackerField;
 import com.intland.swagger.client.model.TrackerFieldDateFieldSettings;
+import com.intland.swagger.client.model.TrackerFieldDependency;
 import com.intland.swagger.client.model.TrackerFieldPermissionAccessPermission;
 import com.intland.swagger.client.model.TrackerFieldServiceDeskField;
 import com.intland.swagger.client.model.UnrestrictedFieldPermission;
@@ -59,7 +61,7 @@ public class TrackerFieldBuilder {
 
 	private Tracker tracker;
 
-	private LoadingCache<TrackerId, Map<String, FieldReference>> trackerFieldCache;
+	private Map<String, TrackerField> existingFields;
 
 	private Map<String, ChoiceOptionReference> existingStatuses;
 
@@ -71,21 +73,41 @@ public class TrackerFieldBuilder {
 
 	private TrackerItemApiService trackerItemApiService;
 
-	public TrackerFieldBuilder(Tracker tracker, LoadingCache<TrackerId, Map<String, FieldReference>> trackerFieldCache,
+	private SharedFieldApiService sharedFieldApiService;
+
+	public TrackerFieldBuilder(Tracker tracker, Map<String, TrackerField> existingFields,
 			RoleApiService roleApiService, UserApiService userApiService, ProjectApiService projectApiService,
-			TrackerItemApiService trackerItemApiService, Map<String, ChoiceOptionReference> existingStatuses) {
-		this.trackerField = new TrackerField();
+			TrackerItemApiService trackerItemApiService, SharedFieldApiService sharedFieldApiService, Map<String, ChoiceOptionReference> existingStatuses) {
+		this(new TrackerField(), tracker, existingFields, roleApiService, userApiService, projectApiService,
+				trackerItemApiService, sharedFieldApiService, existingStatuses);
+	}
+
+	public TrackerFieldBuilder(TrackerField trackerField, Tracker tracker,
+			Map<String, TrackerField> existingFields, RoleApiService roleApiService,
+			UserApiService userApiService, ProjectApiService projectApiService, TrackerItemApiService trackerItemApiService,
+			SharedFieldApiService sharedFieldApiService, Map<String, ChoiceOptionReference> existingStatuses) {
+		this.trackerField = trackerField;
 		this.tracker = tracker;
-		this.trackerFieldCache = trackerFieldCache;
+		this.existingFields = existingFields;
 		this.existingStatuses = existingStatuses;
 		this.roleApiService = roleApiService;
 		this.userApiService = userApiService;
 		this.projectApiService = projectApiService;
 		this.trackerItemApiService = trackerItemApiService;
+		this.sharedFieldApiService = sharedFieldApiService;
 	}
 
 	public TrackerFieldBuilder label(String label) {
 		trackerField.label(label);
+		return this;
+	}
+
+	public TrackerFieldBuilder sharedFields(String... sharedFields) {
+		trackerField.setGlobalTypeIds(Arrays.stream(sharedFields)
+				.map(sharedFieldApiService::getSharedFieldByName)
+				.map(SharedField::id)
+				.map(SharedFieldId::id)
+				.collect(toList()));
 		return this;
 	}
 
@@ -104,9 +126,17 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
+	public TrackerFieldBuilder hidden() {
+		return hidden(true);
+	}
+
 	public TrackerFieldBuilder hidden(boolean hidden) {
 		trackerField.hidden(Boolean.valueOf(hidden));
 		return this;
+	}
+
+	public TrackerFieldBuilder mandatory() {
+		return mandatory(true);
 	}
 
 	public TrackerFieldBuilder mandatory(boolean mandatory) {
@@ -114,9 +144,29 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
+	public TrackerFieldBuilder mandatoryExceptInStatuses(String... statuses) {
+		trackerField.mandatoryExceptInStatus(Arrays.stream(statuses).map(this::convertStatusTextToStatusId)
+				.map(Integer::valueOf)
+				.toList());
+		return this;
+	}
+
+	public TrackerFieldBuilder clearMandatoryExceptInStatuses() {
+		trackerField.mandatoryExceptInStatus(List.of());
+		return this;
+	}
+
+	public TrackerFieldBuilder omitMerge() {
+		return omitMerge(true);
+	}
+
 	public TrackerFieldBuilder omitMerge(boolean omitMerge) {
 		trackerField.omitMerge(Boolean.valueOf(omitMerge));
 		return this;
+	}
+
+	public TrackerFieldBuilder omitSuspectedWhenChange() {
+		return omitSuspectedWhenChange(true);
 	}
 
 	public TrackerFieldBuilder omitSuspectedWhenChange(boolean omitSuspectedWhenChange) {
@@ -124,9 +174,17 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
+	public TrackerFieldBuilder propagateDependencies() {
+		return propagateDependencies(true);
+	}
+
 	public TrackerFieldBuilder propagateDependencies(boolean propagateDependencies) {
 		trackerField.propagateDependencies(Boolean.valueOf(propagateDependencies));
 		return this;
+	}
+
+	public TrackerFieldBuilder propagateSuspect() {
+		return propagateSuspect(true);
 	}
 
 	public TrackerFieldBuilder propagateSuspect(boolean propagateSuspect) {
@@ -134,9 +192,17 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
+	public TrackerFieldBuilder reversedSuspect() {
+		return reversedSuspect(true);
+	}
+
 	public TrackerFieldBuilder reversedSuspect(boolean reversedSuspect) {
 		trackerField.reversedSuspect(Boolean.valueOf(reversedSuspect));
 		return this;
+	}
+
+	public TrackerFieldBuilder listable() {
+		return listable(true);
 	}
 
 	public TrackerFieldBuilder listable(boolean listable) {
@@ -144,14 +210,54 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
+	public TrackerFieldBuilder multipleSelection() {
+		return multipleSelection(true);
+	}
+
 	public TrackerFieldBuilder multipleSelection(boolean multipleSelection) {
 		trackerField.multipleSelection(Boolean.valueOf(multipleSelection));
 		return this;
 	}
 
+	public TrackerFieldBuilder newLine() {
+		return newLine(true);
+	}
+
 	public TrackerFieldBuilder newLine(boolean newLine) {
 		trackerField.newLine(Boolean.valueOf(newLine));
 		return this;
+	}
+
+	/**
+	 * Sets a field which the created field depends on.
+	 * <p>
+	 * Limitation: the field must already exist in the tracker.
+	 */
+	public TrackerFieldBuilder dependsOnField(String fieldName) {
+		return dependsOnField(fieldName, Function.identity());
+	}
+
+	/**
+	 * Sets a field which the created field depends on.
+	 * <p>
+	 * Limitation: the field must already exist in the tracker.
+	 * FieldDependencyBuilder helps to create static field dependencies.
+	 */
+	public TrackerFieldBuilder dependsOnField(String fieldName,
+			Function<FieldDependencyBuilder, FieldDependencyBuilder> builder) {
+		Integer dependantFieldId = getFieldReference(fieldName).getReferenceId();
+		Map<String, String> dependencies = builder.apply(new FieldDependencyBuilder()).build();
+
+		TrackerFieldDependency dependency = createTrackerFieldDependency()
+				.dependentFieldId(dependantFieldId)
+				.valueCombinations(dependencies);
+
+		trackerField.dependency(dependency);
+		return this;
+	}
+
+	public TrackerFieldBuilder union() {
+		return union(true);
 	}
 
 	public TrackerFieldBuilder union(boolean union) {
@@ -200,7 +306,7 @@ public class TrackerFieldBuilder {
 	}
 
 	public TrackerFieldBuilder hideIfFormulaSameAsField(String fieldName) {
-		trackerField.hideIfFormulaSameAsFieldId(getFieldReference(fieldName).getId());
+		trackerField.hideIfFormulaSameAsFieldId(getFieldReference(fieldName).getReferenceId());
 		return this;
 	}
 
@@ -210,7 +316,7 @@ public class TrackerFieldBuilder {
 	}
 
 	public TrackerFieldBuilder mandatoryIfFormulaSameAsField(String fieldName) {
-		trackerField.mandatoryIfFormulaSameAsFieldId(getFieldReference(fieldName).getId());
+		trackerField.mandatoryIfFormulaSameAsFieldId(getFieldReference(fieldName).getReferenceId());
 		return this;
 	}
 
@@ -224,9 +330,17 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
+	public TrackerFieldBuilder displayYear() {
+		return displayYear(true);
+	}
+
 	public TrackerFieldBuilder displayYear(boolean displayYear) {
 		trackerField.dateFieldSettings(createTrackerFieldDateFieldSettings().displayYear(Boolean.valueOf(displayYear)));
 		return this;
+	}
+
+	public TrackerFieldBuilder displayMonth() {
+		return displayMonth(true);
 	}
 
 	public TrackerFieldBuilder displayMonth(boolean displayMonth) {
@@ -234,9 +348,17 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
+	public TrackerFieldBuilder displayDay() {
+		return displayDay(true);
+	}
+
 	public TrackerFieldBuilder displayDay(boolean displayDay) {
 		trackerField.dateFieldSettings(createTrackerFieldDateFieldSettings().displayDay(Boolean.valueOf(displayDay)));
 		return this;
+	}
+
+	public TrackerFieldBuilder displayTime() {
+		return displayTime(true);
 	}
 
 	public TrackerFieldBuilder displayTime(boolean displayTime) {
@@ -271,34 +393,21 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
-	public TrackerItemId getTrackerItem(Project project, String trackerName, String trackerItemName) {
-		TrackerId tracker = projectApiService.findTrackerByName(project, trackerName);
-		TrackerItemId trackerItem = trackerItemApiService.findTrackerItemByName(tracker, trackerItemName);
-
-		return trackerItem;
-	}
-
 	public TrackerFieldBuilder withPermissionUnrestricted() {
 		trackerField.setPermission(new UnrestrictedFieldPermission().type("UNRESTRICTED"));
 		return this;
 	}
 
 	public TrackerFieldBuilder withPermissionSameAsField(String fieldName) {
-		FieldReference fieldReference = getFieldReference(fieldName);
-		trackerField.setPermission(new SameAsFieldPermission().sameAsId(fieldReference.getId()).type("SAME_AS"));
+		TrackerField field = getFieldReference(fieldName);
+		trackerField.setPermission(new SameAsFieldPermission().sameAsId(field.getReferenceId()).type("SAME_AS"));
 		return this;
 	}
 
 	public TrackerFieldBuilder withPermissionSingle(Function<FieldPermissionBuilder, FieldPermissionBuilder> permBuilder) {
 		List<TrackerFieldPermission> permissions = permBuilder.apply(new FieldPermissionBuilder()).build();
 
-		List<TrackerFieldPermissionAccessPermission> convertedPermissions = permissions.stream()
-				.filter(p -> p.status() == null)
-				.map(this::mapPermissionObject)
-				.toList();
-
-		trackerField.setPermission(new SingleFieldPermission().accessPermissions(convertedPermissions).type("SINGLE"));
-		return this;
+		return withPermissionSingle(permissions);
 	}
 
 	public TrackerFieldBuilder withPermissionPerStatus(Function<FieldPermissionBuilder, FieldPermissionBuilder> permBuilder) {
@@ -409,6 +518,21 @@ public class TrackerFieldBuilder {
 		return this;
 	}
 
+	protected TrackerFieldBuilder withPermissionSingle(List<TrackerFieldPermission> permissions) {
+		List<TrackerFieldPermissionAccessPermission> convertedPermissions = permissions.stream()
+				.filter(p -> p.status() == null)
+				.map(this::mapPermissionObject)
+				.toList();
+
+		trackerField.setPermission(new SingleFieldPermission().accessPermissions(convertedPermissions).type("SINGLE"));
+		return this;
+	}
+
+	private TrackerFieldDependency createTrackerFieldDependency() {
+		return Optional.ofNullable(trackerField.getDependency())
+				.orElse(new TrackerFieldDependency());
+	}
+
 	private TrackerFieldServiceDeskField createTrackerFieldServiceDeskField() {
 		return Optional.ofNullable(trackerField.getServiceDeskField())
 				.orElse(new TrackerFieldServiceDeskField());
@@ -419,14 +543,10 @@ public class TrackerFieldBuilder {
 				.orElse(new TrackerFieldDateFieldSettings());
 	}
 
-	private FieldReference getFieldReference(String fieldName) {
+	private TrackerField getFieldReference(String fieldName) {
 		Objects.requireNonNull(fieldName, "Field name cannot be null");
-		try {
-			return Objects.requireNonNull(trackerFieldCache.get(this.tracker.id()).get(fieldName),
+		return Objects.requireNonNull(existingFields.get(fieldName),
 					"Field('%s') cannot be found in tracker(%s)".formatted(fieldName, this.tracker.id()));
-		} catch (ExecutionException e) {
-			throw new IllegalStateException(e.getMessage(), e);
-		}
 	}
 
 	private TrackerFieldPermissionAccessPermission mapPermissionObject(TrackerFieldPermission perm) {
@@ -438,7 +558,7 @@ public class TrackerFieldBuilder {
 		if (SubjectType.ROLE.equals(perm.subjectType())) {
 			apiPermission.setSubjectId(this.roleApiService.findRoleByName(perm.subjectName()).getId());
 		} else {
-			apiPermission.setSubjectId(getFieldReference(perm.subjectName()).getId());
+			apiPermission.setSubjectId(getFieldReference(perm.subjectName()).getReferenceId());
 		}
 
 		return apiPermission;
@@ -469,12 +589,12 @@ public class TrackerFieldBuilder {
 		String defaultValue = value.value();
 
 		return switch (valueType) {
-			case ValueType.TRACKER_ITEM_ID -> formatReferenceText(valueType, defaultValue);
-			case ValueType.TRACKER_ITEM_NAME -> formatReferenceText(
-					valueType, String.valueOf(getTrackerItem(value.project(), value.trackerName(), defaultValue).id()));
-			case ValueType.USER -> formatReferenceText(valueType,
+			case TRACKER_ITEM_ID -> formatReferenceText(valueType, defaultValue);
+			case TRACKER_ITEM_NAME -> formatReferenceText(
+					valueType, String.valueOf(getTrackerItem(value.project(), value.trackerName(), defaultValue).id().id()));
+			case USER -> formatReferenceText(valueType,
 					String.valueOf(userApiService.findUserByName(defaultValue).getId()));
-			case ValueType.ROLE -> formatReferenceText(valueType,
+			case ROLE -> formatReferenceText(valueType,
 					String.valueOf(roleApiService.findRoleByName(defaultValue).getId()));
 			default -> defaultValue;
 		};
@@ -482,5 +602,11 @@ public class TrackerFieldBuilder {
 
 	private String formatReferenceText(ValueType type, String value) {
 		return "%s-%s".formatted(type.getReferenceId(), value);
+	}
+
+	private TrackerItem getTrackerItem(Project project, String trackerName, String trackerItemName) {
+		Tracker foundTracker = projectApiService.findTrackerByName(project, trackerName);
+
+		return trackerItemApiService.findTrackerItemByName(foundTracker, trackerItemName);
 	}
 }

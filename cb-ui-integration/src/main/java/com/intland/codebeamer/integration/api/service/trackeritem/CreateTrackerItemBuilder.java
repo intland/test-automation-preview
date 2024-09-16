@@ -23,6 +23,13 @@ public class CreateTrackerItemBuilder extends AbstractTrackerItemBuilder<CreateT
 				trackerItemApiService);
 	}
 
+	public CreateTrackerItemBuilder(TrackerFieldApiService trackerFieldApiService, TrackerItemApi trackerItemApi,
+			ProjectApiService projectApiService, UserApiService userService, RoleApiService roleApiService,
+			TrackerItemApiService trackerItemApiService) {
+		super(new TrackerItem(), trackerFieldApiService, trackerItemApi, projectApiService, userService, roleApiService,
+				trackerItemApiService);
+	}
+
 	public TrackerItemId create() {
 		try {
 			return SafeStopWatch.measureAndReturn(() -> callCreateTrackerItemApi(), (taskTimeMillis) -> logger

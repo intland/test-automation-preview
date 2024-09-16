@@ -16,18 +16,16 @@ import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
-public class DurationFieldComponent extends AbstractCodebeamerComponent<DurationFieldComponent, DurationFieldAssertions> {
+public class DurationFieldComponent extends AbstractCodebeamerComponent<DurationFieldComponent, DurationFieldAssertions>
+		implements InlineEditable<DurationFieldComponent> {
 	
-	public DurationFieldComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
+	public DurationFieldComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 
-	public DurationFieldComponent edit() {
-		return this;
-	}
-
+	@Override
 	public CodebeamerLocator getValueElement() {
-		return this.locator(" + td.tableItem");
+		return this.locator("");
 	}
 
 	@Override

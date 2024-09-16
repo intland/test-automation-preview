@@ -254,14 +254,18 @@ public enum Country {
 	ZM("Zambia"),
 	ZW("Zimbabwe");
 	
-	private String name;
+	private final String name;
 	
-	private Country(String name) {
+	Country(String name) {
 		this.name = name;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getShortName() {
+		return name();
 	}
 
 	public static Country findByName(String name) {

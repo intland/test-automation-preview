@@ -31,7 +31,7 @@ public class ProjectBrowserCategoryListAssertion extends AbstractCodebeamerCompo
 		return assertAll("Category should not be found by '%s' name".formatted(categoryName), 
 				() -> assertThat(getComponent().getCategoryByName(categoryName)).not().isVisible(createIsVisibleOptions()));
 	}
-	
+
 	private IsVisibleOptions createIsVisibleOptions() {
 		return new IsVisibleOptions().setTimeout(ONE_SECOND_AS_MILLIS);
 	}

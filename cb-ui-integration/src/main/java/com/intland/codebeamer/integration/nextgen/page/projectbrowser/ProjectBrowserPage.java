@@ -7,6 +7,7 @@ import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.nextgen.page.projectbrowser.component.ProjectBrowserCategoryListComponent;
 import com.intland.codebeamer.integration.nextgen.page.projectbrowser.component.ProjectBrowserProjectListComponent;
 import com.intland.codebeamer.integration.sitemap.annotation.Action;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 import com.intland.codebeamer.integration.sitemap.annotation.Page;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerPage;
 import com.intland.codebeamer.integration.ui.nextgen.component.ToastAssertions;
@@ -17,12 +18,14 @@ public class ProjectBrowserPage extends AbstractCodebeamerPage<ProjectBrowserPag
 
 	private static final String PROJECT_BROWSER_PAGE_PATH = "/#/projects/list";
 
+	@Component("Edit categories")
 	private ProjectBrowserCategoryListComponent projectBrowserCategoryListComponent;
 
+	@Component("Project list")
 	private ProjectBrowserProjectListComponent projectBrowserProjectListComponent;
-	
+
 	private ToastComponent toastComponent;
-	
+
 	public ProjectBrowserPage(CodebeamerPage codebeamerPage) {
 		super(codebeamerPage);
 		this.projectBrowserCategoryListComponent = new ProjectBrowserCategoryListComponent(getCodebeamerPage());

@@ -15,9 +15,13 @@ package com.intland.codebeamer.integration.api.service;
 import com.intland.codebeamer.integration.api.service.artifact.ArtifactType;
 
 public abstract class Member {
+	
 	public abstract int getId();
+	
 	public abstract String getName();
+	
 	public abstract ArtifactType getArtifactType();
+	
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Member)) {
@@ -25,4 +29,11 @@ public abstract class Member {
 		}
 		return this.getArtifactType() == ((Member) o).getArtifactType() && this.getId() == ((Member) o).getId();
 	}
+
+	@Override
+	public String toString() {
+		return "Member [getId()=" + getId() + ", getName()=" + getName() + ", getArtifactType()=" + getArtifactType()
+				+ "]";
+	}
+	
 }

@@ -4,12 +4,14 @@ import java.util.function.Consumer;
 
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.nextgen.page.projectbrowser.dialog.component.ProjectBrowserNewCategoryFormComponent;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 import com.intland.codebeamer.integration.ui.nextgen.component.ToastAssertions;
 import com.intland.codebeamer.integration.ui.nextgen.component.ToastComponent;
 import com.intland.codebeamer.integration.ui.nextgen.dialog.AbstractCodebeamerNextGenDialog;
 
 public class ProjectBrowserNewCategoryDialog extends AbstractCodebeamerNextGenDialog {
 
+	@Component("New category dialog")
 	private ProjectBrowserNewCategoryFormComponent projectBrowserNewCategoryFormComponent;
 	
 	private ToastComponent toastComponent;

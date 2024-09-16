@@ -3,35 +3,45 @@ package com.intland.codebeamer.integration.test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.BeforeClass;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.intland.codebeamer.integration.api.ApiUser;
 import com.intland.codebeamer.integration.api.CodebeamerApiClientFactory;
+import com.intland.codebeamer.integration.api.builder.trackerview.TrackerViewId;
+import com.intland.codebeamer.integration.api.service.artifact.AssociationId;
 import com.intland.codebeamer.integration.api.service.project.ProjectId;
 import com.intland.codebeamer.integration.api.service.tracker.Tracker;
 import com.intland.codebeamer.integration.api.service.tracker.TrackerId;
+import com.intland.codebeamer.integration.api.service.trackeritem.TrackerItem;
 import com.intland.codebeamer.integration.api.service.trackeritem.TrackerItemId;
 import com.intland.codebeamer.integration.configuration.ApplicationConfiguration;
 import com.intland.codebeamer.integration.configuration.Configuration;
 import com.intland.swagger.client.internal.ApiClient;
+import com.intland.swagger.client.internal.api.AssociationApi;
 import com.intland.swagger.client.internal.api.ProjectApi;
 import com.intland.swagger.client.internal.api.TrackerApi;
+import com.intland.swagger.client.internal.api.TrackerConfigApi;
 import com.intland.swagger.client.internal.api.TrackerItemApi;
 import com.intland.swagger.client.internal.api.TrackerPermissionApi;
+import com.intland.swagger.client.internal.api.UserApi;
 import com.intland.swagger.client.model.AbstractReference;
+import com.intland.swagger.client.model.Association;
 import com.intland.swagger.client.model.BaselineDetails;
+import com.intland.swagger.client.model.FilterViewInfoRequest;
+import com.intland.swagger.client.model.FiltersView;
 import com.intland.swagger.client.model.MemberReferenceSearchResult;
 import com.intland.swagger.client.model.PaginatedProjectRole;
 import com.intland.swagger.client.model.ProjectBaselineResponse;
@@ -40,8 +50,9 @@ import com.intland.swagger.client.model.ProjectRoles;
 import com.intland.swagger.client.model.ReferenceSearchResult;
 import com.intland.swagger.client.model.RoleReference;
 import com.intland.swagger.client.model.RoleWithPermissions;
+import com.intland.swagger.client.model.StateTransitionsResponse;
 import com.intland.swagger.client.model.TrackerConfiguration;
-import com.intland.swagger.client.model.TrackerItem;
+import com.intland.swagger.client.model.User;
 
 public abstract class AbstractBaseNGTests {
 
@@ -57,15 +68,25 @@ public abstract class AbstractBaseNGTests {
 
 	private TrackerApi trackerApi;
 
+	private TrackerConfigApi trackerConfigApi;
+
 	private TrackerPermissionApi trackerPermissionApi;
+
+	private AssociationApi associationApi;
+
+	private UserApi userApi;
 
 	@BeforeClass(alwaysRun = true)
 	public void loadConfiguration() throws Exception {
-		this.configuration = Objects.requireNonNull(loadConfigurationFrom(getConfigurationName()), "Configuration cannot be null");
+		this.configuration = Objects.requireNonNull(loadConfigurationFrom(getConfigurationName()),
+				"Configuration cannot be null");
 		this.trackerItemApi = new TrackerItemApi(createApiClient(getApplicationConfiguration()));
 		this.projectApi = new ProjectApi(createApiClient(getApplicationConfiguration()));
 		this.trackerApi = new TrackerApi(createApiClient(getApplicationConfiguration()));
+		this.trackerConfigApi = new TrackerConfigApi(createApiClient(getApplicationConfiguration()));
 		this.trackerPermissionApi = new TrackerPermissionApi(createApiClient(getApplicationConfiguration()));
+		this.associationApi = new AssociationApi(createApiClient(getApplicationConfiguration()));
+		this.userApi = new UserApi(createApiClient(getApplicationConfiguration()));
 	}
 
 	protected Configuration getConfiguration() {
@@ -87,8 +108,16 @@ public abstract class AbstractBaseNGTests {
 	protected String getRandomText(String text) {
 		return "%s%s".formatted(text, System.currentTimeMillis());
 	}
+
+	protected String getRandomText() {
+		return RandomStringUtils.randomAlphabetic(20);
+	}
+
+	protected com.intland.swagger.client.model.TrackerItem getTrackerItem(TrackerItem trackerItem) {
+		return getTrackerItem(trackerItem.id());
+	}
 	
-	protected TrackerItem getTrackerItem(TrackerItemId trackerItemId) {
+	protected com.intland.swagger.client.model.TrackerItem getTrackerItem(TrackerItemId trackerItemId) {
 		try {
 			return trackerItemApi.getTrackerItem(Integer.valueOf(trackerItemId.id()), null, null);
 		} catch (Exception e) {
@@ -118,7 +147,7 @@ public abstract class AbstractBaseNGTests {
 
 	protected List<ProjectRoles> getProjectRoles(Integer projectId) {
 		try {
-			PaginatedProjectRole paginatedProjectRole = projectApi.getRoles1(projectId, null, Boolean.TRUE,
+			PaginatedProjectRole paginatedProjectRole = projectApi.getRoles1(projectId, null, null, Boolean.TRUE,
 					null, null, null, null);
 			return Optional.ofNullable(paginatedProjectRole)
 					.map(PaginatedProjectRole::getRoles)
@@ -150,7 +179,7 @@ public abstract class AbstractBaseNGTests {
 
 	protected List<BaselineDetails> getProjectBaselines(ProjectId projectId) {
 		try {
-			return Optional.ofNullable(projectApi.getBaselines(Integer.valueOf(projectId.id()), Boolean.TRUE))
+			return Optional.ofNullable(projectApi.getBaselines(Integer.valueOf(projectId.id()), Boolean.TRUE, null))
 					.map(ProjectBaselineResponse::getBaselines)
 					.orElse(List.of());
 		} catch (Exception e) {
@@ -168,6 +197,46 @@ public abstract class AbstractBaseNGTests {
 		}
 	}
 
+	public Optional<User> findUserById(Integer userId) {
+		try {
+			return Optional.ofNullable(userApi.getUser(userId));
+		} catch (Exception e) {
+			throw new IllegalStateException(e.getMessage(), e);
+		}
+	}
+
+	public Association findAssociation(AssociationId associationId) {
+		try {
+			return associationApi.getAssociation(associationId.id());
+		} catch (Exception e) {
+			throw new IllegalStateException(e.getMessage(), e);
+		}
+	}
+
+	public FiltersView findTrackerView(TrackerId trackerId, TrackerViewId trackerViewId) {
+		try {
+			return trackerConfigApi.getTrackerFilterInfo(trackerId.id(), new FilterViewInfoRequest().viewId(trackerViewId.id()));
+		} catch (Exception e) {
+			throw new IllegalStateException(e.getMessage(), e);
+		}
+	}
+
+	public StateTransitionsResponse findStateTransitions(TrackerId trackerId) {
+		try {
+			return trackerConfigApi.getTrackerStateTransitions(trackerId.id(), null);
+		} catch (Exception e) {
+			throw new IllegalStateException(e.getMessage(), e);
+		}
+	}
+
+	protected Path getFilePath(String resourceName) {
+		try {
+			return Paths.get(this.getClass().getResource(resourceName).toURI());
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
 	private ApiClient createApiClient(ApplicationConfiguration applicationConfiguration) {
 		return createApiClient(applicationConfiguration.getApiUser());
 	}
@@ -182,7 +251,7 @@ public abstract class AbstractBaseNGTests {
 		return configurationName;
 	}
 	
-	private Configuration loadConfigurationFrom(String configurationFileName) throws IOException, StreamReadException, DatabindException {
+	private Configuration loadConfigurationFrom(String configurationFileName) throws IOException {
 		return readValue(getContentFromFile(configurationFileName)
 				.orElseGet(() -> getContentFromResource(configurationFileName).orElse(null)));
 	}
@@ -203,7 +272,7 @@ public abstract class AbstractBaseNGTests {
 		}
 	}
 	
-	private Configuration readValue(String content) throws IOException, StreamReadException, DatabindException {
+	private Configuration readValue(String content) throws IOException {
 		logger.debug("Configuration file content is: \n{}", content);
 		return new ObjectMapper(new YAMLFactory()).readValue(content, Configuration.class);
 	}

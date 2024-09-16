@@ -16,8 +16,8 @@ import java.nio.file.Path;
 
 import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
-import com.intland.codebeamer.integration.classic.page.trackeritem.importer.CharsetName;
-import com.intland.codebeamer.integration.classic.page.trackeritem.importer.FieldSeparator;
+import com.intland.codebeamer.integration.classic.page.trackeritem.importer.enums.CharsetName;
+import com.intland.codebeamer.integration.classic.page.trackeritem.importer.enums.FieldSeparator;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
 public class TrackerItemImportFormComponent
@@ -34,6 +34,11 @@ public class TrackerItemImportFormComponent
 
 	public TrackerItemImportFormComponent addFile(Path path) {
 		getCodebeamerPage().uploadFiles(() -> getFileInputLocator().click(), path);
+		return this;
+	}
+
+	public TrackerItemImportFormComponent cancelUpload() {
+		getRemoveUploadLinkElement().click();
 		return this;
 	}
 
@@ -106,5 +111,13 @@ public class TrackerItemImportFormComponent
 
 	private CodebeamerLocator getFileInputLocator() {
 		return this.locator("input[type='file'][name='file']");
+	}
+
+	public CodebeamerLocator getRemoveUploadLinkElement() {
+		return this.locator("a.qq-upload-remove");
+	}
+
+	public CodebeamerLocator getNextLocator() {
+		return this.locator("input#_eventId_next");
 	}
 }

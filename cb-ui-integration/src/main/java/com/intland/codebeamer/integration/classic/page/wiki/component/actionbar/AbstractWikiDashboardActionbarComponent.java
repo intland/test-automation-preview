@@ -33,9 +33,15 @@ public abstract class AbstractWikiDashboardActionbarComponent
 		return this.locator("[class*='dashboard-actionbar'] [src*='icon_new_dashboard']");
 	}
 
+	public CodebeamerLocator getMoreActionButton() {
+		return this.locator("#middleHeaderDiv [class*='menuArrowDown']");
+	}
+
 	public abstract AbstractWikiNewChildDialog createNewWiki();
 
 	public abstract AbstractDashboardNewChildDialog createNewDashBoard();
+
+	public abstract WikiDashboardMoreActionMenuComponent openMoreActionMenu();
 
 	@Override
 	public abstract AbstractWikiDashboardActionbarAssertion assertThat();

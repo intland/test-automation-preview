@@ -7,8 +7,8 @@ tasks.distZip.enabled = false
 tasks.distTar.enabled = false
 
 dependencies {
-	implementation group: 'com.intland.codebeamer', name: 'cb-common', version: '2.3.0.0-SNAPSHOT1'
-	implementation group: 'com.intland.codebeamer', name: 'cb-api-internal', version: '2.3.0.0-SNAPSHOT1'
+	implementation group: 'com.intland.codebeamer', name: 'cb-common', version: '2.3.0.0-SNAPSHOT2'
+	implementation group: 'com.intland.codebeamer', name: 'cb-api-internal', version: '2.3.0.0-SNAPSHOT2'
 	
 	implementation group: 'org.testng', name: 'testng', version: '7.10.2'
 	implementation group: 'com.microsoft.playwright', name: 'playwright', version: '1.44.0'
@@ -25,6 +25,9 @@ dependencies {
 	implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
 	
 	implementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+	
+	implementation group: 'org.json', name: 'json', version: '20240303'
+	implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
 }
 
 test {

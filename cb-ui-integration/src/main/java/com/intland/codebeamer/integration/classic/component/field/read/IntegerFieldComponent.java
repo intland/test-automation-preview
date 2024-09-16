@@ -16,18 +16,16 @@ import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
-public class IntegerFieldComponent extends AbstractCodebeamerComponent<IntegerFieldComponent, IntegerFieldAssertions> {
+public class IntegerFieldComponent extends AbstractCodebeamerComponent<IntegerFieldComponent, IntegerFieldAssertions>
+		implements InlineEditable<IntegerFieldComponent> {
 
-	public IntegerFieldComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
-	}
-	
-	public IntegerFieldComponent edit() {
-		return this;
+	public IntegerFieldComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 
+	@Override
 	public CodebeamerLocator getValueElement() {
-		return this.locator(" + td.tableItem");
+		return this.locator("");
 	}
 
 	@Override

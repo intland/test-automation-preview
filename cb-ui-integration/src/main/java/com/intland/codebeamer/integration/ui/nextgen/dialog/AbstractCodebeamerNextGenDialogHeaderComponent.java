@@ -8,7 +8,7 @@ public class AbstractCodebeamerNextGenDialogHeaderComponent extends
 		AbstractCodebeamerComponent<AbstractCodebeamerNextGenDialogHeaderComponent, AbstractCodebeamerNextGenDialogHeaderAssertion> {
 
 	public AbstractCodebeamerNextGenDialogHeaderComponent(CodebeamerPage codebeamerPage, String frameLocator) {
-		super(codebeamerPage, frameLocator, "div.p-dialog-header");
+		super(codebeamerPage, frameLocator + "div.p-dialog-header");
 	}
 
 	public CodebeamerLocator getTitle() {

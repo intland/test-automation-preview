@@ -15,7 +15,6 @@ package com.intland.codebeamer.integration.classic.page.user.child.dashboard;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.classic.page.dashboard.child.AbstractDashboardNewChildDialogNavigation;
 import com.intland.codebeamer.integration.classic.page.user.UserDashboardPage;
-import com.intland.codebeamer.integration.classic.page.user.UserWikiPage;
 import com.intland.codebeamer.integration.sitemap.annotation.Action;
 
 public class UserDashboardNewChildDialogNavigation extends AbstractDashboardNewChildDialogNavigation {

@@ -13,8 +13,8 @@
 package com.intland.codebeamer.integration.classic.page.trackeritem.importer.component;
 
 import com.intland.codebeamer.integration.CodebeamerLocator;
-import com.intland.codebeamer.integration.classic.page.trackeritem.importer.CharsetName;
-import com.intland.codebeamer.integration.classic.page.trackeritem.importer.FieldSeparator;
+import com.intland.codebeamer.integration.classic.page.trackeritem.importer.enums.CharsetName;
+import com.intland.codebeamer.integration.classic.page.trackeritem.importer.enums.FieldSeparator;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponentAssert;
 
 public class TrackerItemImportFormAssertions
@@ -74,12 +74,20 @@ public class TrackerItemImportFormAssertions
 				() -> assertThat(getComponent().getCharsetLocator()).hasValue(charset.getValue()));
 	}
 
+	public TrackerItemImportFormAssertions removeUploadLinkElementNotVisible() {
+		return isNotVisible(getComponent().getRemoveUploadLinkElement());
+	}
+
 	private TrackerItemImportFormAssertions isSelected(String fileFormat, CodebeamerLocator locator) {
 		return assertAll("%s should be selected".formatted(fileFormat), () -> assertThat(locator).isChecked());
 	}
 
 	private TrackerItemImportFormAssertions isNotSelected(String fileFormat, CodebeamerLocator locator) {
 		return assertAll("%s shouldn't be selected".formatted(fileFormat), () -> assertThat(locator).not().isChecked());
+	}
+
+	private TrackerItemImportFormAssertions isNotVisible(CodebeamerLocator locator) {
+		return assertAll("%s should not be visible".formatted(locator), () -> assertThat(locator).not().isVisible());
 	}
 
 	public TrackerItemImportFormAssertions isOnlyOneFileFormatSelected() {

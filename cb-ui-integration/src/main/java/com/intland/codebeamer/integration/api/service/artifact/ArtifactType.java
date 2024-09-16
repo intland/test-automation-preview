@@ -12,6 +12,8 @@
 
 package com.intland.codebeamer.integration.api.service.artifact;
 
+import java.util.Arrays;
+
 public enum ArtifactType {
 	USER_ACCOUNT (1),
 	PROJECT (2),
@@ -45,4 +47,11 @@ public enum ArtifactType {
 	private ArtifactType(int value) {
 		this.value = value;
 	}
+	
+	public static ArtifactType findById(int value) {
+		return Arrays.stream(ArtifactType.values())
+				.filter(type -> type.getValue() == value)
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("ArtifactType cannot be found by id: %s".formatted(Integer.valueOf(value))));
+	} 
 }

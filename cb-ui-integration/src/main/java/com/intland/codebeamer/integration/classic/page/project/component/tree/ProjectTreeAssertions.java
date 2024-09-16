@@ -13,10 +13,9 @@
 package com.intland.codebeamer.integration.classic.page.project.component.tree;
 
 import com.intland.codebeamer.integration.classic.page.wiki.component.tree.AbstractTreeAssertions;
-import com.intland.codebeamer.integration.classic.page.wiki.component.tree.AbstractTreeComponent;
 
-public class ProjectTreeAssertions extends AbstractTreeAssertions {
-	protected ProjectTreeAssertions(AbstractTreeComponent component) {
+public class ProjectTreeAssertions extends AbstractTreeAssertions<ProjectTreeComponent, ProjectTreeAssertions> {
+	protected ProjectTreeAssertions(ProjectTreeComponent component) {
 		super(component);
 	}
 }

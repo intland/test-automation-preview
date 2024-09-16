@@ -1,24 +1,24 @@
 applicationConfiguration:
-  url: "http://localhost:8080"
+  url: "http://localhost:8080" # the url of your codebeamer server where the UI tests will run
   apiUserConfiguration:
-    username: "bond"
-    password: "007"
+    username: "bond" # main API user name
+    password: "007" # main API user pw
 screenshotConfiguration:
-  directoryPath: null
+  directoryPath: null # path of the screenshots folder, if null then the default java tmp folder is used
   uri: null
 viewportConfiguration:
-  width: 1280
-  height: 1024
+  width: 1280 # width of the browser window
+  height: 1024 # height of the browser window
 tracingConfiguration:
-  traceDirectoryPath: null
-  openTraceApplication: false
-  sources: true
-  snapshots: true
-  screenshots: true
+  traceDirectoryPath: null # path of the trace files, if null then the default java tmp folder is used
+  openTraceApplication: false # opens trace window in case of an error
+  sources: true # true - includes source files in case of an error
+  snapshots: true # true - on every action DOM snapshots and network activity will be captured in case of an error
+  screenshots: true # true - creates a screenshot in case of an error
 timeoutConfiguration:
-  defaultTimeout: 5000
-  defaultNavigationTimeout: 5000
+  defaultTimeout: 5000 # ms
+  defaultNavigationTimeout: 5000 # ms
 debugConfiguration:
-  slowMo: 0
-  headless: false
-  inspector: false
+  slowMo: 0 # ms - adds this amount of sleep between UI steps
+  headless: false # true - opens a browser during test execution
+  inspector: false # true - opens inspector window for UI debugging

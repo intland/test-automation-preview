@@ -12,5 +12,7 @@ public @interface Component {
 	public String value();
 	
 	public String details() default "";
+
+	public boolean includeInSitemap() default true;
 	
 }

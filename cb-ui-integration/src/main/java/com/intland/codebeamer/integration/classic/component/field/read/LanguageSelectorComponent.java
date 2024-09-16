@@ -20,19 +20,21 @@ import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.api.service.trackeritem.Language;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
-public class LanguageSelectorComponent extends AbstractCodebeamerComponent<LanguageSelectorComponent, LanguageSelectorAssertions> {
+public class LanguageSelectorComponent extends AbstractCodebeamerComponent<LanguageSelectorComponent, LanguageSelectorAssertions>
+		implements InlineEditable<LanguageSelectorComponent> {
 
-	public LanguageSelectorComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
+	public LanguageSelectorComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
-	
+
 	public List<Language> getLanguages() {
-		return Arrays.stream(getValueContainerElement().text().split(","))
+		return Arrays.stream(getValueElement().text().split(","))
 				.map(String::trim).map(Language::findByName).toList();
 	}
-	
-	public CodebeamerLocator getValueContainerElement() {
-		return this.locator(" + td.tableItem.fieldColumn");
+
+	@Override
+	public CodebeamerLocator getValueElement() {
+		return this.locator("");
 	}
 
 	@Override

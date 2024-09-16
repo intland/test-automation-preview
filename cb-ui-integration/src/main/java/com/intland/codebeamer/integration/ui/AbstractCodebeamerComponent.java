@@ -40,45 +40,41 @@ public abstract class AbstractCodebeamerComponent<C extends AbstractCodebeamerCo
 	
 	private final String componentLocator;
 
-	private boolean isIframe;
-
-	public AbstractCodebeamerComponent(CodebeamerPage codebeamerPage, String componentLocator) {
-		this.codebeamerPage = codebeamerPage;
-		this.componentLocator = componentLocator;
+	protected AbstractCodebeamerComponent(CodebeamerPage codebeamerPage, String componentLocator) {
+		this(codebeamerPage, null, componentLocator);
 	}
 
-	public AbstractCodebeamerComponent(CodebeamerPage codebeamerPage, String frameLocator, String componentLocator) {
-		this(codebeamerPage, frameLocator, componentLocator, false);
-	}
-	
-	public AbstractCodebeamerComponent(CodebeamerPage codebeamerPage, String frameLocator, String componentLocator, boolean isIframe) {
+	protected AbstractCodebeamerComponent(CodebeamerPage codebeamerPage, String frameLocator, String componentLocator) {
 		this.codebeamerPage = codebeamerPage;
 		this.frameLocator = frameLocator;
 		this.componentLocator = componentLocator;
-		this.isIframe = isIframe;
 	}
 
-	protected Optional<CodebeamerLocator> locatorIfPresent(String selector) {
+	protected Optional<CodebeamerLocator> locatorIfPresent(String selector, long timeout) {
 		CodebeamerLocator locator = locator(selector);
 
 		try {
-			PlaywrightAssertions.assertThat(locator.getLocator()).isAttached(new IsAttachedOptions().setTimeout(TimeUnit.SECONDS.toMillis(1)));
+			PlaywrightAssertions.assertThat(locator.getLocator()).isAttached(new IsAttachedOptions().setTimeout(TimeUnit.SECONDS.toMillis(timeout)));
 			return Optional.of(locator);
 		} catch (AssertionFailedError e) {
 			return Optional.empty();
 		}
 	}
+
+	protected Optional<CodebeamerLocator> locatorIfPresent(String selector) {
+		return locatorIfPresent(selector, 1);
+	}
+
+	protected CodebeamerLocator locatorByTestId(String testId) {
+		return codebeamerPage.locatorByTestId(testId);
+	}
 	
 	protected CodebeamerLocator locator(String selector) {
-		if (isIframe) {
+		if (StringUtils.isNotBlank(frameLocator)) {
 			return codebeamerPage.frameLocator(frameLocator, getSelector(selector));
 		}
 		
-		if (StringUtils.isBlank(frameLocator)) {
-			return codebeamerPage.locator(getSelector(selector));
-		}
-		
-		return codebeamerPage.locator(getSelector(frameLocator, getSelector(selector)));
+		return codebeamerPage.locator(getSelector(selector));
 	}
 	
 	protected Requests collectRequests(Runnable action) {
@@ -93,12 +89,16 @@ public abstract class AbstractCodebeamerComponent<C extends AbstractCodebeamerCo
 		String absoluteRequestUrl = codebeamerPage.getApiUriPathBuilder().path(requestUrl).build();
 		codebeamerPage.waitForResponse(isRequestEqualsIgnoreCase(absoluteRequestUrl).and(isRequestMethod(requestMethod)), expectedStatus);
 	}
-	
+
 	public void waitForResponse(Predicate<Response> predicate, int expectedStatus) {
 		codebeamerPage.waitForResponse(predicate, expectedStatus);
 	}
-	
-	public void waitForNetworkidle() {
+
+	public void waitForResponse(Predicate<Response> predicate, int expectedStatus, double timeout) {
+		codebeamerPage.waitForResponse(predicate, expectedStatus, timeout);
+	}
+
+	public void waitForNetworkIdle() {
 		codebeamerPage.waitForNetworkidle();
 	}
 	
@@ -118,22 +118,46 @@ public abstract class AbstractCodebeamerComponent<C extends AbstractCodebeamerCo
 	public CodebeamerAssertionUtil getAssertions() {
 		return this.codebeamerPage.getAssertions();
 	}
-	
+
 	public abstract A assertThat();
-		
+
+	public boolean hasNoChild() {
+		return this.selfLocator().hasNoChild();
+	}
+
+	protected String getFrameLocator() {
+		return frameLocator;
+	}
+
+	public CodebeamerLocator getLocator() {
+		return this.locator("");
+	}
+
 	protected String escapeApostrophe(String text) {
 		return text.replaceAll("'", "\\\\'");
 	}
 
-	protected Predicate<Response> responseEndsWith(String path) {
+	protected Predicate<Response> urlEndsWith(String path) {
 		return response -> {
-			String url = response.url();
+			String url = response.url().split("\\?")[0];
 			return url.endsWith(path);
 		};
 	}
-	
+
+	protected String getSelector() {
+		return componentLocator;
+	}
+
 	protected String getSelector(String selector) {
+		if (StringUtils.isBlank(selector)) {
+			return componentLocator;
+		}
+
 		return getSelector(componentLocator, selector);
+	}
+
+	protected CodebeamerLocator selfLocator() {
+		return this.locator("");
 	}
 	
 	private String getSelector(String selectorParent, String selector) {

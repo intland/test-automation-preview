@@ -26,30 +26,42 @@ import com.intland.codebeamer.integration.classic.page.tracker.config.component.
 import com.intland.codebeamer.integration.classic.page.tracker.config.component.TrackerConfigServiceDeskTab;
 import com.intland.codebeamer.integration.classic.page.tracker.config.component.TrackerConfigStateTransitionsTab;
 import com.intland.codebeamer.integration.sitemap.annotation.Action;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
+import com.intland.codebeamer.integration.sitemap.annotation.Page;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerPage;
 
+@Page("TrackerConfigurationPage")
 public class TrackerConfigurationPage extends AbstractCodebeamerPage<TrackerConfigurationPage> {
 
 	private static final String TRACKER_PAGE = "/proj/tracker/configuration.spr?tracker_id=%s";
 
 	private Tracker tracker;
 
+	@Component("Overlay messages")
 	private OverlayMessageBoxComponent overlayMessageBoxComponent;
 
+	@Component("General tab")
 	private TrackerConfigGeneralTab trackerConfigGeneralTab;
 
+	@Component("Permissions tab")
 	private TrackerConfigPermissionsTab trackerConfigPermissionsTab;
 
+	@Component("State transitions tab")
 	private TrackerConfigStateTransitionsTab trackerConfigStateTransitionsTab;
 
+	@Component("Fields tab")
 	private TrackerConfigFieldsTab trackerConfigFieldsTab;
 
+	@Component("Escalations tab")
 	private TrackerConfigEscalationTab trackerConfigEscalationTab;
 
+	@Component("Notifications tab")
 	private TrackerConfigNotificationsTab trackerConfigNotificationsTab;
 
+	@Component("Audit trail tab")
 	private TrackerConfigAuditTrailTab trackerConfigAuditTrailTab;
 
+	@Component("Service desk tab")
 	private TrackerConfigServiceDeskTab trackerConfigServiceDeskTab;
 
 	public TrackerConfigurationPage(CodebeamerPage codebeamerPage, Tracker tracker) {
@@ -60,7 +72,7 @@ public class TrackerConfigurationPage extends AbstractCodebeamerPage<TrackerConf
 		this.trackerConfigPermissionsTab = new TrackerConfigPermissionsTab(getCodebeamerPage());
 		this.trackerConfigStateTransitionsTab = new TrackerConfigStateTransitionsTab(getCodebeamerPage());
 		this.trackerConfigFieldsTab = new TrackerConfigFieldsTab(getCodebeamerPage());
-		this.trackerConfigEscalationTab = new TrackerConfigEscalationTab(getCodebeamerPage());
+		this.trackerConfigEscalationTab = new TrackerConfigEscalationTab(getCodebeamerPage(), tracker);
 		this.trackerConfigNotificationsTab = new TrackerConfigNotificationsTab(getCodebeamerPage());
 		this.trackerConfigAuditTrailTab = new TrackerConfigAuditTrailTab(getCodebeamerPage());
 		this.trackerConfigServiceDeskTab = new TrackerConfigServiceDeskTab(getCodebeamerPage());

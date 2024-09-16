@@ -22,7 +22,7 @@ public class ProjectBrowserCategoryListComponent
 		getDeleteActionForCategory(categoryName).click();
 		return this;
 	}
-	
+
 	public CodebeamerLocator getNewCategoryButton() {
 		return this.locator(".project-hiearchy-view-controls div.new-category-container .create-new-category-button");		
 	}
@@ -46,7 +46,7 @@ public class ProjectBrowserCategoryListComponent
 	public CodebeamerLocator getCategoryByName(String categoryName) {
 		return this.locator("li.category-element:has(input.category-name-field[value='%s'])".formatted(categoryName));		
 	}
-		
+
 	@Override
 	public ProjectBrowserCategoryListAssertion assertThat() {
 		return new ProjectBrowserCategoryListAssertion(this);

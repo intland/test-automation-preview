@@ -15,7 +15,7 @@ package com.intland.codebeamer.integration.classic.page.project.component.tree;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.classic.page.wiki.component.tree.AbstractTreeComponent;
 
-public class ProjectTreeComponent extends AbstractTreeComponent {
+public class ProjectTreeComponent extends AbstractTreeComponent<ProjectTreeComponent, ProjectTreeAssertions> {
 
 	public ProjectTreeComponent(CodebeamerPage codebeamerPage) {
 		super(codebeamerPage);

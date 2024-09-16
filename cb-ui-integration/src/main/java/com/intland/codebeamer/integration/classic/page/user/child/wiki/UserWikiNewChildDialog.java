@@ -18,10 +18,12 @@ import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.classic.page.user.child.wiki.component.UserWikiNewChildDialogFormAssertions;
 import com.intland.codebeamer.integration.classic.page.user.child.wiki.component.UserWikiNewChildDialogFormComponent;
 import com.intland.codebeamer.integration.classic.page.wiki.child.AbstractWikiNewChildDialog;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 
 public class UserWikiNewChildDialog
 		extends AbstractWikiNewChildDialog<UserWikiNewChildDialogFormComponent, UserWikiNewChildDialogFormAssertions> {
 
+	@Component("New child wiki dialog")
 	private final UserWikiNewChildDialogFormComponent wikiNewChildDialogFormComponent;
 
 	public UserWikiNewChildDialog(CodebeamerPage codebeamerPage) {

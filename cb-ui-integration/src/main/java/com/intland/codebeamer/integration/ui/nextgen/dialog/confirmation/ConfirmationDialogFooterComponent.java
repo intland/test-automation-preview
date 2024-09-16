@@ -8,7 +8,7 @@ public class ConfirmationDialogFooterComponent
 		extends AbstractCodebeamerComponent<ConfirmationDialogFooterComponent, ConfirmationDialogFooterAssertion> {
 
 	public ConfirmationDialogFooterComponent(CodebeamerPage codebeamerPage, String frameLocator) {
-		super(codebeamerPage, frameLocator, "div.p-dialog-footer p-footer");
+		super(codebeamerPage, frameLocator + "div.p-dialog-footer p-footer");
 	}
 	
 	public CodebeamerLocator getYesButton() {

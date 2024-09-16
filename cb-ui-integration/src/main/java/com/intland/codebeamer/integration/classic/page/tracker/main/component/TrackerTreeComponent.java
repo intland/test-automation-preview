@@ -12,22 +12,13 @@
 
 package com.intland.codebeamer.integration.classic.page.tracker.main.component;
 
-import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
-import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
+import com.intland.codebeamer.integration.classic.page.wiki.component.tree.AbstractTreeComponent;
 
-public class TrackerTreeComponent extends AbstractCodebeamerComponent<TrackerTreeComponent, TrackerTreeAssertions> {
+public class TrackerTreeComponent extends AbstractTreeComponent<TrackerTreeComponent, TrackerTreeAssertions> {
 
 	public TrackerTreeComponent(CodebeamerPage codebeamerPage) {
-		super(codebeamerPage, "#west");
-	}
-
-	public CodebeamerLocator getWorkTrackerByName(String trackerName) {
-		return this.locator("li#work:has([rawname='%s'])".formatted(trackerName));
-	}
-
-	public CodebeamerLocator getConfigTrackerByName(String trackerName) {
-		return this.locator("li#config:has([rawname='%s'])".formatted(trackerName));
+		super(codebeamerPage);
 	}
 
 	@Override

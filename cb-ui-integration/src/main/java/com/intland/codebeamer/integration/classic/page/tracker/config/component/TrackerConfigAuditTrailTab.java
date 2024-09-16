@@ -27,12 +27,12 @@ public class TrackerConfigAuditTrailTab extends
 	}
 
 	@Override
-	public TrackerConfigAuditTrailTab saveTrackerConfig() {
+	public TrackerConfigAuditTrailTab save() {
 		throw new UnsupportedOperationException(SAVE_BUTTON_DOES_NOT_EXIST);
 	}
 
 	@Override
-	public TrackerConfigAuditTrailTab cancelTrackerConfig() {
+	public TrackerConfigAuditTrailTab cancel() {
 		throw new UnsupportedOperationException(CANCEL_BUTTON_DOES_NOT_EXIST);
 	}
 

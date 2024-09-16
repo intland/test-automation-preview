@@ -26,6 +26,11 @@ public class TrackerConfigServiceDeskTab extends AbstractTrackerConfigTab<Tracke
 	}
 
 	@Override
+	protected boolean waitForLoadingDialog() {
+		return false;
+	}
+
+	@Override
 	protected String getTabId() {
 		return "#tracker-customize-serviceDesk-tab";
 	}

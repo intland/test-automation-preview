@@ -21,7 +21,7 @@ public abstract class AbstractDashboardNewChildDialogFormComponent
 		AbstractCodebeamerComponent<AbstractDashboardNewChildDialogFormComponent, AbstractDashboardNewChildDialogFormAssertions> {
 
 	public AbstractDashboardNewChildDialogFormComponent(CodebeamerPage codebeamerPage, String frameLocator) {
-		super(codebeamerPage, frameLocator, "form#addDashboardCommand", true);
+		super(codebeamerPage, frameLocator, "form#addDashboardCommand");
 	}
 
 	public AbstractDashboardNewChildDialogFormComponent pageName(String name) {

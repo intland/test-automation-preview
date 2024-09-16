@@ -18,6 +18,7 @@ import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.api.service.project.Project;
 import com.intland.codebeamer.integration.classic.page.tracker.main.component.TrackerTreeComponent;
 import com.intland.codebeamer.integration.sitemap.annotation.Action;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 import com.intland.codebeamer.integration.sitemap.annotation.Page;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerPage;
 
@@ -28,6 +29,7 @@ public class TrackersPage extends AbstractCodebeamerPage<TrackersPage> {
 
 	private final Project project;
 
+	@Component("Tracker tree")
 	private TrackerTreeComponent trackerTreeComponent;
 
 	public TrackersPage(CodebeamerPage codebeamerPage, Project project) {

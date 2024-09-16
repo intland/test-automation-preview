@@ -12,6 +12,8 @@
 
 package com.intland.codebeamer.integration.classic.page.tracker.config.fields;
 
+import java.util.Arrays;
+
 public enum FieldType {
 
 	TEXT(0),
@@ -42,5 +44,13 @@ public enum FieldType {
 
 	public String getTypeIdAsString() {
 		return String.valueOf(typeId);
+	}
+
+	public static FieldType findById(int value) {
+		return Arrays.stream(FieldType.values())
+				.filter(type -> type.getTypeId().intValue() == value)
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException(
+						"FieldType cannot be found by id: %s".formatted(Integer.valueOf(value))));
 	}
 }

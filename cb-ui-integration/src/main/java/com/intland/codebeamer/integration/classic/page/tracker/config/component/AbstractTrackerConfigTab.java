@@ -28,12 +28,15 @@ public abstract class AbstractTrackerConfigTab<C extends AbstractTrackerConfigTa
 		return (C) this;
 	}
 
-	public C saveTrackerConfig() {
+	public C save() {
 		getSaveButton().click();
+		if (waitForLoadingDialog()) {
+			getLoadingDialogElement().waitForDetached();
+		}
 		return (C) this;
 	}
 
-	public C cancelTrackerConfig() {
+	public C cancel() {
 		getCancelButton().click(); // TODO navigation or just assert?
 		return (C) this;
 	}
@@ -48,6 +51,18 @@ public abstract class AbstractTrackerConfigTab<C extends AbstractTrackerConfigTa
 
 	public CodebeamerLocator getCancelButton() {
 		return this.locator(getMainFormId() + " .actionBar input[name='_cancel']");
+	}
+
+	public CodebeamerLocator getLoadingDialogElement() {
+		return getCodebeamerPage().locator(".showBusySignDialog");
+	}
+
+	/**
+	 * Whether to wait for the 'Loading' dialog to show up and disappear.
+	 * Not every tab displays a loading icon.
+	 */
+	protected boolean waitForLoadingDialog() {
+		return true;
 	}
 
 	protected abstract String getTabId();

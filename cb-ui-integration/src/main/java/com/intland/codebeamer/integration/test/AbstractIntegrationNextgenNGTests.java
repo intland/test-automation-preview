@@ -3,7 +3,7 @@ package com.intland.codebeamer.integration.test;
 import com.intland.codebeamer.integration.api.service.user.User;
 import com.intland.codebeamer.integration.api.service.user.UserApiService;
 import com.intland.codebeamer.integration.application.NextgenCodebeamerApplication;
-import com.intland.codebeamer.integration.util.UriPathBuilder;
+import com.intland.codebeamer.integration.util.CBXPathUtil;
 
 public abstract class AbstractIntegrationNextgenNGTests extends AbstractIntegrationNGTests {
 
@@ -33,7 +33,7 @@ public abstract class AbstractIntegrationNextgenNGTests extends AbstractIntegrat
 	
 	@Override
 	protected String getApplicationUrl() {
-		return new UriPathBuilder(super.getApplicationUrl()).path("x").build();
+		return CBXPathUtil.getApplicationUrl(super.getApplicationUrl());
 	}
 	
 }

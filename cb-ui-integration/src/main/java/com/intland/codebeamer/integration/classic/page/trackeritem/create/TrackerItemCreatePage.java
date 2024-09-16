@@ -3,10 +3,12 @@ package com.intland.codebeamer.integration.classic.page.trackeritem.create;
 import java.util.function.Consumer;
 
 import com.intland.codebeamer.integration.CodebeamerPage;
-import com.intland.codebeamer.integration.api.service.tracker.Tracker;
+import com.intland.codebeamer.integration.api.service.tracker.TrackerId;
+import com.intland.codebeamer.integration.classic.page.trackeritem.component.TrackerItemFieldEditFormAssertions;
+import com.intland.codebeamer.integration.classic.page.trackeritem.component.TrackerItemFieldEditFormComponent;
 import com.intland.codebeamer.integration.sitemap.annotation.Action;
+import com.intland.codebeamer.integration.sitemap.annotation.Component;
 import com.intland.codebeamer.integration.sitemap.annotation.Page;
-import com.intland.codebeamer.integration.test.testdata.DataManagerService;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerPage;
 
 @Page("TrackerItemCreatePage")
@@ -14,17 +16,22 @@ public class TrackerItemCreatePage extends AbstractCodebeamerPage<TrackerItemCre
 
 	private static final String TRACKER_ITEM_CREATE_PAGE_URL = "/tracker/%s/create";
 	
-	private Tracker tracker;
+	private TrackerId trackerId;
 
 	private TrackerItemCreatePageNavigation trackerItemCreatePageNavigation;
 
-	private TrackerItemFieldCreateFormComponent trackerItemFieldCreateFormComponent;
+	@Component("Edit fields")
+	private TrackerItemFieldEditFormComponent trackerItemFieldFormComponent;
 
-	public TrackerItemCreatePage(DataManagerService dataManagerService, CodebeamerPage codebeamerPage, Tracker tracker) {
+	public TrackerItemCreatePage(CodebeamerPage codebeamerPage, TrackerId trackerId) {
+		this(codebeamerPage, trackerId, null);
+	}
+
+	public TrackerItemCreatePage(CodebeamerPage codebeamerPage, TrackerId trackerId, String frameLocator) {
 		super(codebeamerPage);
-		this.tracker = tracker;
-		this.trackerItemCreatePageNavigation = new TrackerItemCreatePageNavigation(dataManagerService,codebeamerPage, tracker);
-		this.trackerItemFieldCreateFormComponent = new TrackerItemFieldCreateFormComponent(dataManagerService, codebeamerPage, tracker);
+		this.trackerId = trackerId;
+		this.trackerItemCreatePageNavigation = new TrackerItemCreatePageNavigation(codebeamerPage, trackerId, frameLocator);
+		this.trackerItemFieldFormComponent = new TrackerItemFieldEditFormComponent(codebeamerPage, frameLocator);
 	}
 
 	@Action("Visit")
@@ -35,27 +42,26 @@ public class TrackerItemCreatePage extends AbstractCodebeamerPage<TrackerItemCre
 
 	@Override
 	public TrackerItemCreatePage isActive() {
-		// assertUrl(formatPageUrl(), "Trackers page should be the active page");
 		return this;
 	}
 	
 	public TrackerItemCreatePageNavigation save() {
-		this.trackerItemFieldCreateFormComponent.getSaveButton().click();
+		this.trackerItemFieldFormComponent.getSaveButton().click();
 		return trackerItemCreatePageNavigation;
 	}
 	
-	public TrackerItemCreatePage fieldFormComponent(Consumer<TrackerItemFieldCreateFormComponent> formConsumer) {
-		formConsumer.accept(trackerItemFieldCreateFormComponent);
+	public TrackerItemCreatePage fieldFormComponent(Consumer<TrackerItemFieldEditFormComponent> formConsumer) {
+		formConsumer.accept(trackerItemFieldFormComponent);
 		return this;
 	}
 
-	public TrackerItemCreatePage assertFieldFormComponent(Consumer<TrackerItemFieldCreateFormAssertions> assertion) {
-		assertion.accept(trackerItemFieldCreateFormComponent.assertThat());
+	public TrackerItemCreatePage assertFieldFormComponent(Consumer<TrackerItemFieldEditFormAssertions> assertion) {
+		assertion.accept(trackerItemFieldFormComponent.assertThat());
 		return this;
 	}
 	
 	private String formatPageUrl() {
-		return TRACKER_ITEM_CREATE_PAGE_URL.formatted(Integer.valueOf(tracker.id().id()));
+		return TRACKER_ITEM_CREATE_PAGE_URL.formatted(Integer.valueOf(trackerId.id()));
 	}
 
 }

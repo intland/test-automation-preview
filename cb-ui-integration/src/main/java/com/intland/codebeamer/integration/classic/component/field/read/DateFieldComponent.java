@@ -19,20 +19,18 @@ import com.intland.codebeamer.integration.CodebeamerLocator;
 import com.intland.codebeamer.integration.CodebeamerPage;
 import com.intland.codebeamer.integration.ui.AbstractCodebeamerComponent;
 
-public class DateFieldComponent extends AbstractCodebeamerComponent<DateFieldComponent, DateFieldAssertions> {
+public class DateFieldComponent extends AbstractCodebeamerComponent<DateFieldComponent, DateFieldAssertions>
+		implements InlineEditable<DateFieldComponent> {
 
 	private static final String DATE_FIELD_PATTERN = "MMM dd yyyy HH:mm";
 	
-	public DateFieldComponent(CodebeamerPage codebeamerPage, String fieldName) {
-		super(codebeamerPage, "td:text-is('%s:')".formatted(fieldName));
+	public DateFieldComponent(CodebeamerPage codebeamerPage, String fieldLocator) {
+		super(codebeamerPage, fieldLocator);
 	}
 
-	public DateFieldComponent edit() {
-		return this;
-	}
-
+	@Override
 	public CodebeamerLocator getValueElement() {
-		return this.locator(" + td.tableItem");
+		return this.locator("");
 	}
 
 	@Override
