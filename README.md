@@ -16,4 +16,9 @@
   - CB_LICENSE=<license>
 * ./gradlew clean test
 
+## How to run in IDEA
+Import the project as a gradle project and make sure you change the following configuration
+
+![image](https://github.com/user-attachments/assets/bb6349de-976d-414e-95d2-74e02fc1f121)
+
   
