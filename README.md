@@ -13,7 +13,7 @@
   - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
   - CB_MAC_ADDRESS=00:00:00:00:00:00
   - CB_apiThrottling=false
-  - CB_LICENSE=<license>
+  - CB_LICENSE=your license
 * ./gradlew clean test
 
 ## How to run in IDEA
