@@ -70,8 +70,9 @@ public abstract class AbstractIntegrationNGTests extends AbstractBaseNGTests {
 				.setChannel("chrome")
 				.setArgs(List.of("--unsafely-disable-devtools-self-xss-warnings"))
 				.setSlowMo(getSlowMo())
+				.setExecutablePath(System.getenv("PLAYWRIGHT_CHROME_EXECUTABLE_PATH"))
 				.setHeadless(isHeadless());
-		
+
 		playwright = Playwright.create();
 		browser = playwright.chromium().launch(setHeadless);
 		
